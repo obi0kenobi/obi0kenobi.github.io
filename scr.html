@@ -23,6 +23,7 @@
       color: #ccc;
       text-decoration: none;
       margin-left: 20px;
+      font-size: 14px;
     }
 
     .navbar a:hover {
@@ -30,10 +31,129 @@
     }
 
     .content {
-      padding: 80px 20px;
+      padding: 50px 20px 80px;
+    }
+
+    .page-title {
+      font-size: 48px;
+      margin-bottom: 30px;
+    }
+
+    .table-box {
+      max-width: 950px;
+      margin: 30px auto;
+      padding: 30px;
+      background: #1a1a1a;
+      border-radius: 18px;
+      text-align: left;
+      box-shadow: 0 0 20px rgba(255,255,255,0.04);
+    }
+
+    .table-box h2 {
+      margin: 0 0 20px 0;
+      font-size: 38px;
+      color: #dbeafe;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 18px;
+    }
+
+    th {
+      color: #3b82f6;
+      font-weight: 700;
+    }
+
+    td {
+      color: #e5e7eb;
+    }
+
+    .rank {
+      font-weight: 700;
+    }
+
+    .qualified {
+      color: #ff4d4d;
+    }
+
+    .dispatcher {
+      color: #ff8c32;
+    }
+
+    .guard {
+      color: #facc15;
+    }
+
+    .signaller {
+      color: #12af86;
+    }
+
+    .supervisor {
+      color: #22d3ee;
+    }
+
+    .training-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .training-buttons button {
+      margin: 5px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: bold;
+    }
+
+    .training-buttons button:hover {
+      background: #5865F2;
+      box-shadow: 0 0 10px #5865F2;
+    }
+
+    @media (max-width: 800px) {
+      .navbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .navbar a {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      .table-box {
+        padding: 20px;
+      }
+
+      th,
+      td {
+        font-size: 15px;
+        padding: 12px 8px;
+      }
+
+      .page-title {
+        font-size: 36px;
+      }
+
+      .table-box h2 {
+        font-size: 30px;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <div class="navbar">
@@ -46,9 +166,145 @@
   </div>
 
   <div class="content">
-    <h1>SCR Data</h1>
-    <p>Put your SCR data here.</p>
+    <h1 class="page-title">SCR Data</h1>
+
+    <!-- Rank History -->
+    <div class="table-box">
+      <h2>Rank History</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>From the</th>
+            <th>Until the</th>
+            <th>Total days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank qualified">Qualified Driver</td>
+            <td>11/10/2023</td>
+            <td>15/10/2023</td>
+            <td>4 days</td>
+          </tr>
+          <tr>
+            <td class="rank dispatcher">Dispatcher</td>
+            <td>15/10/2023</td>
+            <td>03/11/2023</td>
+            <td>19 days</td>
+          </tr>
+          <tr>
+            <td class="rank guard">Guard</td>
+            <td>03/11/2023</td>
+            <td>26/10/2024</td>
+            <td>358 days</td>
+          </tr>
+          <tr>
+            <td class="rank supervisor">Supervisor</td>
+            <td>26/10/2024</td>
+            <td>now</td>
+            <td id="supervisor-days">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Training Count -->
+    <div class="table-box">
+      <h2>Training Count</h2>
+
+      <table class="training-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Host Count</th>
+            <th>CoHost Count</th>
+            <th>Total Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank qualified qd">Qualified Driver</td>
+            <td>N/A</td>
+            <td>32</td>
+            <td>32</td>
+          </tr>
+          <tr>
+            <td class="rank dispatcher ds">Dispatcher</td>
+            <td>N/A</td>
+            <td>43</td>
+            <td>43</td>
+          </tr>
+          <tr>
+            <td class="rank guard gd">Guard</td>
+            <td>83</td>
+            <td>191</td>
+            <td>274</td>
+          </tr>
+          <tr>
+            <td class="rank signaller sg">Signaller Practical</td>
+            <td>0</td>
+            <td>2</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td class="rank signaller sg">Signaller Assessment</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="training-buttons">
+        <button onclick="filterTraining('all')">ALL</button>
+        <button onclick="filterTraining('qd')">QD</button>
+        <button onclick="filterTraining('ds')">DS</button>
+        <button onclick="filterTraining('gd')">GD</button>
+        <button onclick="filterTraining('sg')">SG</button>
+      </div>
+    </div>
   </div>
+
+  <script>
+    function calculateDaysSince(startDateStr) {
+      const parts = startDateStr.split("/");
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+
+      const startDate = new Date(year, month, day);
+      const today = new Date();
+
+      startDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      const diffMs = today - startDate;
+      return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    }
+
+    const supervisorDays = calculateDaysSince("26/10/2024");
+    document.getElementById("supervisor-days").textContent = supervisorDays + " days";
+
+    function filterTraining(type) {
+      const rows = document.querySelectorAll(".training-table tbody tr");
+
+      rows.forEach(row => {
+        if (type === "all") {
+          row.style.display = "";
+          return;
+        }
+
+        const firstCell = row.querySelector("td");
+        if (firstCell.classList.contains(type)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>
