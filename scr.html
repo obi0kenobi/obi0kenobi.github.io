@@ -16,7 +16,6 @@
     .navbar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       padding: 15px 30px;
       background: #111;
     }
@@ -25,7 +24,6 @@
       color: #ccc;
       text-decoration: none;
       margin-left: 20px;
-      font-size: 14px;
     }
 
     .navbar a:hover {
@@ -39,51 +37,43 @@
 
     .page-title {
       font-size: 48px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
-    /* INFO BOX */
-.overview {
-  max-width: 800px;
-  margin: 30px auto 20px;
-  text-align: center;
-}
+    /* OVERVIEW */
+    .overview {
+      max-width: 800px;
+      margin: 30px auto 20px;
+      text-align: center;
+    }
 
-.overview h2 {
-  margin-bottom: 15px;
-  font-size: 38px;
-  color: #dbeafe;
-  letter-spacing: 1px;
-}
+    .overview h2 {
+      font-size: 38px;
+      margin-bottom: 15px;
+      color: #dbeafe;
+    }
 
-.overview p {
-  color: #bbb;
-  line-height: 1.7;
-  margin-bottom: 10px;
-  font-size: 16px;
-}
+    .overview p {
+      color: #bbb;
+      margin-bottom: 10px;
+    }
 
-/* Make last updated stand out */
-.overview .updated {
-  margin-top: 15px;
-  font-size: 15px;
-  color: #888;
-}
+    .overview .updated {
+      color: #888;
+    }
 
-.overview .updated b {
-  color: #fff;
-}
+    .overview .updated b {
+      color: white;
+    }
 
-/* subtle divider */
-.overview::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 2px;
-  background: #5865F2;
-  margin: 20px auto 0;
-  border-radius: 2px;
-}
+    .overview::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: #5865F2;
+      margin: 20px auto 0;
+    }
 
     /* TABLE BOX */
     .table-box {
@@ -93,12 +83,11 @@
       background: #1a1a1a;
       border-radius: 18px;
       text-align: left;
-      box-shadow: 0 0 20px rgba(255,255,255,0.04);
     }
 
     .table-box h2 {
-      margin: 0 0 20px 0;
-      font-size: 38px;
+      font-size: 34px;
+      margin-bottom: 20px;
       color: #dbeafe;
     }
 
@@ -108,9 +97,8 @@
     }
 
     th, td {
-      padding: 16px 12px;
+      padding: 14px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
-      font-size: 18px;
     }
 
     th {
@@ -118,10 +106,10 @@
     }
 
     td {
-      color: #e5e7eb;
+      color: #ddd;
     }
 
-    /* RANK COLOURS */
+    /* COLOURS */
     .qualified { color: #ff4d4d; font-weight: bold; }
     .dispatcher { color: #ff8c32; font-weight: bold; }
     .guard { color: #facc15; font-weight: bold; }
@@ -130,8 +118,8 @@
 
     /* BUTTONS */
     .training-buttons {
-      margin-top: 20px;
       text-align: center;
+      margin-top: 20px;
     }
 
     .training-buttons button {
@@ -142,13 +130,20 @@
       background: #2a2a2a;
       color: white;
       cursor: pointer;
-      font-weight: bold;
-      transition: 0.2s;
     }
 
     .training-buttons button:hover {
       background: #5865F2;
-      box-shadow: 0 0 10px #5865F2;
+    }
+
+    .updated {
+      text-align: center;
+      margin-top: 15px;
+      color: #888;
+    }
+
+    .updated b {
+      color: white;
     }
   </style>
 </head>
@@ -169,63 +164,51 @@
     <h1 class="page-title">SCR Data</h1>
 
     <!-- OVERVIEW -->
-<div class="overview">
-  <h2>Overview</h2>
-
-  <p>
-    Here you can find all SCR data and training stats. Feel free to have a look around.
-  </p>
-
-  <p>
-<p class="updated">
-  Last updated: <b id="last-updated">Loading...</b>
-</p>
-  </p>
-
-  <p>
-    Notes: Add updates or announcements here.
-  </p>
-</div>
+    <div class="overview">
+      <h2>Overview</h2>
+      <p>This page contains my SCR data including rank history and training statistics.</p>
+      <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
+    </div>
 
     <!-- RANK HISTORY -->
     <div class="table-box">
       <h2>Rank History</h2>
 
       <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>From</th>
-            <th>Until</th>
-            <th>Total Days</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="qualified">Qualified Driver</td>
-            <td>11/10/2023</td>
-            <td>15/10/2023</td>
-            <td>4 days</td>
-          </tr>
-          <tr>
-            <td class="dispatcher">Dispatcher</td>
-            <td>15/10/2023</td>
-            <td>03/11/2023</td>
-            <td>19 days</td>
-          </tr>
-          <tr>
-            <td class="guard">Guard</td>
-            <td>03/11/2023</td>
-            <td>26/10/2024</td>
-            <td>358 days</td>
-          </tr>
-          <tr>
-            <td class="supervisor">Supervisor</td>
-            <td>26/10/2024</td>
-            <td>now</td>
-            <td id="supervisor-days">Loading...</td>
-          </tr>
-        </tbody>
+        <tr>
+          <th>Rank</th>
+          <th>From</th>
+          <th>Until</th>
+          <th>Total Days</th>
+        </tr>
+
+        <tr>
+          <td class="qualified">Qualified Driver</td>
+          <td>11/10/2023</td>
+          <td>15/10/2023</td>
+          <td>4 days</td>
+        </tr>
+
+        <tr>
+          <td class="dispatcher">Dispatcher</td>
+          <td>15/10/2023</td>
+          <td>03/11/2023</td>
+          <td>19 days</td>
+        </tr>
+
+        <tr>
+          <td class="guard">Guard</td>
+          <td>03/11/2023</td>
+          <td>26/10/2024</td>
+          <td>358 days</td>
+        </tr>
+
+        <tr>
+          <td class="supervisor">Supervisor</td>
+          <td>26/10/2024</td>
+          <td>now</td>
+          <td id="supervisor-days">Loading...</td>
+        </tr>
       </table>
     </div>
 
@@ -242,39 +225,12 @@
             <th>Total</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td class="qualified qd">Qualified Driver</td>
-            <td>N/A</td>
-            <td>32</td>
-            <td>32</td>
-          </tr>
-          <tr>
-            <td class="dispatcher ds">Dispatcher</td>
-            <td>N/A</td>
-            <td>43</td>
-            <td>43</td>
-          </tr>
-          <tr>
-            <td class="guard gd">Guard</td>
-            <td>83</td>
-            <td>191</td>
-            <td>274</td>
-          </tr>
-          <tr>
-            <td class="signaller sg">Signaller Practical</td>
-            <td>0</td>
-            <td>2</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td class="signaller sg">Signaller Assessment</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
+        <tbody id="training-body">
+          <tr><td colspan="4">Loading data...</td></tr>
         </tbody>
       </table>
+
+      <p class="updated">Data updated: <b id="data-updated">Loading...</b></p>
 
       <div class="training-buttons">
         <button onclick="filterTraining('all')">ALL</button>
@@ -287,18 +243,65 @@
   </div>
 
   <script>
+    // Supervisor days
     function calculateDaysSince(dateStr) {
-      const [d, m, y] = dateStr.split("/");
-      const start = new Date(y, m - 1, d);
+      const [d,m,y] = dateStr.split("/");
+      const start = new Date(y, m-1, d);
       const today = new Date();
       start.setHours(0,0,0,0);
       today.setHours(0,0,0,0);
-      return Math.floor((today - start) / (1000 * 60 * 60 * 24));
+      return Math.floor((today - start) / (1000*60*60*24));
     }
 
     document.getElementById("supervisor-days").textContent =
       calculateDaysSince("26/10/2024") + " days";
 
+    // Page updated time
+    document.getElementById("last-updated").textContent =
+      new Date().toLocaleDateString("en-GB");
+
+    // Load Google Sheets data
+    async function loadTrainingData() {
+      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
+
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+
+      const rows = json.table.rows;
+      const tbody = document.getElementById("training-body");
+      tbody.innerHTML = "";
+
+      rows.slice(1).forEach(row => {
+        const type = row.c[0]?.v || "";
+        const host = row.c[1]?.v || "N/A";
+        const cohost = row.c[2]?.v || 0;
+        const total = row.c[3]?.v || 0;
+
+        let cls = "";
+        if (type.includes("QD")) cls = "qd qualified";
+        else if (type.includes("DS")) cls = "ds dispatcher";
+        else if (type.includes("GD")) cls = "gd guard";
+        else cls = "sg signaller";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="${cls}">${type}</td>
+          <td>${host}</td>
+          <td>${cohost}</td>
+          <td>${total}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("data-updated").textContent =
+        new Date().toLocaleString("en-GB");
+    }
+
+    loadTrainingData();
+
+    // Filter
     function filterTraining(type) {
       document.querySelectorAll(".training-table tbody tr").forEach(row => {
         if (type === "all" || row.querySelector("td").classList.contains(type)) {
@@ -308,10 +311,6 @@
         }
       });
     }
-
-    const today = new Date();
-    document.getElementById("last-updated").textContent =
-      today.toLocaleDateString("en-GB");
   </script>
 
 </body>
