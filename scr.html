@@ -43,27 +43,23 @@
     }
 
     /* INFO BOX */
-    .info-box {
-      max-width: 950px;
-      margin: 20px auto 30px;
-      padding: 25px;
-      background: #1a1a1a;
-      border-radius: 18px;
-      text-align: left;
-      box-shadow: 0 0 20px rgba(255,255,255,0.04);
-    }
+.overview {
+  max-width: 950px;
+  margin: 20px auto 10px;
+  text-align: left;
+}
 
-    .info-box h2 {
-      margin: 0 0 15px 0;
-      font-size: 32px;
-      color: #dbeafe;
-    }
+.overview h2 {
+  margin-bottom: 10px;
+  font-size: 32px;
+  color: #dbeafe;
+}
 
-    .info-box p {
-      color: #ccc;
-      line-height: 1.6;
-      margin: 0 0 10px 0;
-    }
+.overview p {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
 
     /* TABLE BOX */
     .table-box {
@@ -149,12 +145,21 @@
     <h1 class="page-title">SCR Data</h1>
 
     <!-- OVERVIEW -->
-    <div class="info-box">
-      <h2>Overview</h2>
-      <p>This page contains my SCR data including rank history and training statistics.</p>
-      <p>Last updated: <b id="last-updated">Loading...</b></p>
-      <p>Notes: Add updates or announcements here.</p>
-    </div>
+<div class="overview">
+  <h2>Overview</h2>
+
+  <p>
+    This page contains my SCR data including rank history and training statistics.
+  </p>
+
+  <p>
+    Last updated: <b id="last-updated">Loading...</b>
+  </p>
+
+  <p>
+    Notes: Add updates or announcements here.
+  </p>
+</div>
 
     <!-- RANK HISTORY -->
     <div class="table-box">
