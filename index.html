@@ -45,27 +45,52 @@
 
     .card {
       background: #1a1a1a;
-      padding: 20px;
+      padding: 25px;
       margin: 15px;
       border-radius: 15px;
       display: inline-block;
       width: 250px;
+      transition: 0.2s;
     }
 
-.discord-tag {
-  background-color: #2f3136;
-  color: #dcddde;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 13px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+
+    /* Discord tag */
+    .discord-tag {
+      background-color: #2f3136;
+      color: #dcddde;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
 
     .discord-tag:hover {
       background-color: #5865F2;
       color: white;
+      box-shadow: 0 0 10px #5865F2;
+    }
+
+    /* Social buttons */
+    .social-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #5865F2;
+      color: white;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .social-btn:hover {
+      background: #4752c4;
       box-shadow: 0 0 10px #5865F2;
     }
   </style>
@@ -81,43 +106,44 @@
     <p>
       Hello and welcome to my site! My name is Obi (obi0kenobi on roblox).
       A 
-<span style="color:#ebbc25; font-weight:bold;">Guarding</span> and 
-<span style="color:#12af86; font-weight:bold;">Signalling</span> 
-<span style="color:#21d6d1; font-weight:bold;">Supervisor</span> at SCR. 
+      <span style="color:#ebbc25; font-weight:bold;">Guarding</span> and 
+      <span style="color:#12af86; font-weight:bold;">Signalling</span> 
+      <span style="color:#21d6d1; font-weight:bold;">Supervisor</span> at SCR. 
       Feel free to have a look around. If you have any questions, feel free to message me on discord: 
-      
-      <!-- ⚠️ REPLACE THE NUMBER WITH YOUR DISCORD USER ID -->
       <a href="https://discord.com/users/1177528398470459483" target="_blank" class="discord-tag">@cjx_7</a>
     </p>
 
     <div style="margin-top: 25px;">
-  <a class="btn" href="#">Lets go</a>
-</div>
-
-  <!-- SERVICES -->
-  <div class="section">
-    <h2>What I Do</h2>
-
-    <div class="card">
-      <h3>Web Design</h3>
-      <p>I make clean websites</p>
-    </div>
-
-    <div class="card">
-      <h3>Gaming</h3>
-      <p>I like games 🎮</p>
-    </div>
-
-    <div class="card">
-      <h3>Random Stuff</h3>
-      <p>More things soon...</p>
+      <a class="btn" href="#">Lets go</a>
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- SOCIALS -->
   <div class="section">
-    <p>M</p>
+    <h2>Links</h2>
+
+    <!-- Discord -->
+    <div class="card">
+      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="50">
+      <h3>Discord</h3>
+      <p>@cjx_7</p>
+      <a class="social-btn" href="https://discord.com/users/1177528398470459483" target="_blank">
+        Open Profile
+      </a>
+    </div>
+
+    <!-- Roblox -->
+    <div class="card">
+      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968389.png" width="50">
+      <h3>Roblox</h3>
+      <p>obi0kenobi</p>
+      <a class="social-btn" href="https://www.roblox.com/users/1402371469/profile" target="_blank">
+        View Profile
+      </a>
+    </div>
+
   </div>
 
 </body>
 </html>
+
