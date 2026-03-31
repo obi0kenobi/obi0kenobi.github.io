@@ -13,7 +13,7 @@
     }
 
     .hero {
-      padding: 80px 20px 40px; /* tighter spacing */
+      padding: 80px 20px 30px;
     }
 
     h1 {
@@ -40,15 +40,21 @@
     }
 
     .section {
-      padding: 20px 20px; /* moved links up */
+      padding: 20px 20px;
+    }
+
+    /* FIXED ALIGNMENT */
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
     }
 
     .card {
       background: #1a1a1a;
       padding: 25px;
-      margin: 15px;
       border-radius: 15px;
-      display: inline-block;
       width: 250px;
       transition: 0.2s;
     }
@@ -56,6 +62,14 @@
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+
+    /* ICON FIX */
+    .card img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      margin-bottom: 10px;
     }
 
     /* Discord tag */
@@ -113,8 +127,8 @@
       <a href="https://discord.com/users/1177528398470459483" target="_blank" class="discord-tag">@cjx_7</a>
     </p>
 
-    <!-- moved button closer -->
-    <div style="margin-top: 10px;">
+    <!-- MORE SPACE BELOW TEXT -->
+    <div style="margin-top: 40px;">
       <a class="btn" href="#">Lets go</a>
     </div>
   </div>
@@ -123,26 +137,29 @@
   <div class="section">
     <h2>Links</h2>
 
-    <!-- Discord -->
-    <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="50">
-      <h3>Discord</h3>
-      <p>@cjx_7</p>
-      <a class="social-btn" href="https://discord.com/users/1177528398470459483" target="_blank">
-        Open Profile
-      </a>
-    </div>
+    <div class="cards">
 
-    <!-- Roblox (FIXED ICON) -->
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Roblox_Logo_2022.svg" width="50">
-      <h3>Roblox</h3>
-      <p>obi0kenobi</p>
-      <a class="social-btn" href="https://www.roblox.com/users/" target="_blank">
-        View Profile
-      </a>
-    </div>
+      <!-- Discord -->
+      <div class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png">
+        <h3>Discord</h3>
+        <p>@cjx_7</p>
+        <a class="social-btn" href="https://discord.com/users/1177528398470459483" target="_blank">
+          Open Profile
+        </a>
+      </div>
 
+      <!-- Roblox (FIXED ICON + CENTERED) -->
+      <div class="card">
+        <img src="https://www.roblox.com/favicon.ico">
+        <h3>Roblox</h3>
+        <p>obi0kenobi</p>
+        <a class="social-btn" href="https://www.roblox.com/users/1402371469/profile" target="_blank">
+          View Profile
+        </a>
+      </div>
+
+    </div>
   </div>
 
 </body>
