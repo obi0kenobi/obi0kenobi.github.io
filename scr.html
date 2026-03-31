@@ -44,21 +44,45 @@
 
     /* INFO BOX */
 .overview {
-  max-width: 950px;
-  margin: 20px auto 10px;
-  text-align: left;
+  max-width: 800px;
+  margin: 30px auto 20px;
+  text-align: center;
 }
 
 .overview h2 {
-  margin-bottom: 10px;
-  font-size: 32px;
+  margin-bottom: 15px;
+  font-size: 38px;
   color: #dbeafe;
+  letter-spacing: 1px;
 }
 
 .overview p {
-  color: #ccc;
-  line-height: 1.6;
-  margin-bottom: 8px;
+  color: #bbb;
+  line-height: 1.7;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Make last updated stand out */
+.overview .updated {
+  margin-top: 15px;
+  font-size: 15px;
+  color: #888;
+}
+
+.overview .updated b {
+  color: #fff;
+}
+
+/* subtle divider */
+.overview::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  background: #5865F2;
+  margin: 20px auto 0;
+  border-radius: 2px;
 }
 
     /* TABLE BOX */
@@ -153,7 +177,9 @@
   </p>
 
   <p>
-    Last updated: <b id="last-updated">Loading...</b>
+<p class="updated">
+  Last updated: <b id="last-updated">Loading...</b>
+</p>
   </p>
 
   <p>
