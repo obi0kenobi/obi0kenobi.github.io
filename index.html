@@ -12,6 +12,40 @@
       text-align: center;
     }
 
+    /* NAVBAR */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: #111;
+      position: sticky;
+      top: 0;
+    }
+
+    .nav-left {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .nav-left a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-right a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #ccc;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .nav-right a:hover {
+      color: white;
+    }
+
+    /* HERO */
     .hero {
       padding: 80px 20px 30px;
     }
@@ -43,7 +77,6 @@
       padding: 20px 20px;
     }
 
-    /* FIXED ALIGNMENT */
     .cards {
       display: flex;
       justify-content: center;
@@ -64,7 +97,6 @@
       box-shadow: 0 0 15px rgba(255,255,255,0.1);
     }
 
-    /* ICON FIX */
     .card img {
       width: 50px;
       height: 50px;
@@ -72,7 +104,6 @@
       margin-bottom: 10px;
     }
 
-    /* Discord tag */
     .discord-tag {
       background-color: #2f3136;
       color: #dcddde;
@@ -90,7 +121,6 @@
       box-shadow: 0 0 10px #5865F2;
     }
 
-    /* Social buttons */
     .social-btn {
       display: inline-block;
       margin-top: 10px;
@@ -113,6 +143,19 @@
 
 <body>
 
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="nav-left">
+      <a href="#">🏠 Home</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="#">SCR Data</a>
+      <a href="#">Shifts + Events Data</a>
+      <a href="#">Signalling</a>
+    </div>
+  </div>
+
   <!-- HERO -->
   <div class="hero">
     <h1>Welcome!!</h1>
@@ -127,7 +170,6 @@
       <a href="https://discord.com/users/1177528398470459483" target="_blank" class="discord-tag">@cjx_7</a>
     </p>
 
-    <!-- MORE SPACE BELOW TEXT -->
     <div style="margin-top: 40px;">
       <a class="btn" href="#">Lets go</a>
     </div>
@@ -139,7 +181,6 @@
 
     <div class="cards">
 
-      <!-- Discord -->
       <div class="card">
         <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png">
         <h3>Discord</h3>
@@ -149,12 +190,11 @@
         </a>
       </div>
 
-      <!-- Roblox (FIXED ICON + CENTERED) -->
       <div class="card">
         <img src="https://www.roblox.com/favicon.ico">
         <h3>Roblox</h3>
         <p>obi0kenobi</p>
-        <a class="social-btn" href="https://www.roblox.com/users/1402371469/profile" target="_blank">
+        <a class="social-btn" href="https://www.roblox.com/users/" target="_blank">
           View Profile
         </a>
       </div>
