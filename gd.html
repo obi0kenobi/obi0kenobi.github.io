@@ -237,9 +237,33 @@
 
     .chart-wrap {
       width: 100%;
-      height: 320px;
+      height: 220px;
       position: relative;
     }
+
+    .pie-grid .table-box {
+  padding: 22px 24px;
+}
+
+.pie-grid .table-box h2 {
+  margin-bottom: 14px;
+  font-size: 28px;
+}
+
+.pie-grid .chart-note {
+  margin-top: 8px;
+}
+
+.total-note {
+  margin-top: 8px;
+  text-align: center;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.total-note b {
+  color: white;
+}
 
     .chart-note {
       margin-top: 12px;
@@ -311,14 +335,14 @@
           </table>
         </div>
 
-        <div class="pie-grid">
-          <div class="table-box">
-            <h2>Trainee Stats</h2>
-            <div class="chart-wrap">
-              <canvas id="trainee-stats-chart"></canvas>
-            </div>
-            <p class="chart-note">Breakdown of trainee outcomes.</p>
-          </div>
+<div class="table-box">
+  <h2>Trainee Stats</h2>
+  <div class="chart-wrap">
+    <canvas id="trainee-stats-chart"></canvas>
+  </div>
+  <p class="chart-note">Breakdown of passed vs failed trainees.</p>
+  <p class="total-note">Total assessed: <b id="assessed-total">Loading...</b></p>
+</div>
 
           <div class="table-box">
             <h2>Training Role Types</h2>
@@ -606,44 +630,57 @@
       });
     }
 
-    function loadTraineeChart(rows) {
-      const labels = [];
-      const values = [];
+function loadTraineeChart(rows) {
+  let passed = 0;
+  let failed = 0;
+  let totalAssessed = 0;
 
-      rows.forEach(row => {
-        const label = row.c?.[0]?.v?.toString().trim();
-        const value = row.c?.[1]?.v;
+  rows.forEach(row => {
+    const label = row.c?.[0]?.v?.toString().trim().toLowerCase();
+    const value = Number(row.c?.[1]?.v ?? 0);
 
-        if (!label || value == null) return;
+    if (!label) return;
 
-        labels.push(label);
-        values.push(Number(value));
-      });
-
-      const ctx = document.getElementById("trainee-stats-chart").getContext("2d");
-
-      if (traineeChart) traineeChart.destroy();
-
-      traineeChart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: labels,
-          datasets: [{
-            data: values,
-            backgroundColor: ["#21d6d1", "#eb842d", "#d84340", "#12af86", "#ebbc25"]
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: { color: "#ddd" }
-            }
-          }
-        }
-      });
+    if (label.includes("pass")) {
+      passed = value;
+    } else if (label.includes("fail")) {
+      failed = value;
+    } else if (label.includes("assessed") || label.includes("total")) {
+      totalAssessed = value;
     }
+  });
+
+  // fallback in case total isn't supplied separately
+  if (!totalAssessed) {
+    totalAssessed = passed + failed;
+  }
+
+  document.getElementById("assessed-total").textContent = totalAssessed;
+
+  const ctx = document.getElementById("trainee-stats-chart").getContext("2d");
+
+  if (traineeChart) traineeChart.destroy();
+
+  traineeChart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: ["Passed", "Failed"],
+      datasets: [{
+        data: [passed, failed],
+        backgroundColor: ["#12af86", "#d84340"]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: "#ddd" }
+        }
+      }
+    }
+  });
+}
 
     function loadRolePieChart(rows) {
       const labels = [];
