@@ -85,6 +85,22 @@
       transition: 0.2s;
     }
 
+    .time-box {
+  display: inline-block;
+  background: #1a1a1a;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.05);
+  transition: 0.2s;
+}
+
+.time-box:hover {
+  box-shadow: 0 0 15px rgba(255,255,255,0.15);
+}
+
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 0 15px rgba(255,255,255,0.1);
@@ -163,9 +179,9 @@
     </p>
 
     <!-- spacing fixed -->
-    <div style="margin-top: 40px;">
-      <a class="btn" href="#links">Lets go</a>
-    </div>
+<div style="margin-top: 40px;">
+  <div id="live-time" class="time-box">Loading time...</div>
+</div>
   </div>
 
   <!-- SOCIALS -->
@@ -196,6 +212,22 @@
 
     </div>
   </div>
+<script>
+  function updateTime() {
+    const now = new Date();
 
+    const formatted =
+      now.toLocaleDateString("en-GB") + " " +
+      now.toLocaleTimeString("en-GB", { hour12: false });
+
+    // 👇 manually set location (no tracking involved)
+    const locationLabel = " (Melbourne, AU)";
+
+    document.getElementById("live-time").textContent = formatted + locationLabel;
+  }
+
+  updateTime();
+  setInterval(updateTime, 1000);
+</script>
 </body>
 </html>
