@@ -216,11 +216,11 @@
       display: none;
     }
 
-.chart-wrap {
-  width: 100%;
-  height: 280px;
-  position: relative;
-}
+    .chart-wrap {
+      width: 100%;
+      height: 280px;
+      position: relative;
+    }
 
     .chart-note {
       margin-top: 12px;
@@ -342,7 +342,7 @@
 
       loadRoleCount(rows);
       loadLeaderboard(rows);
-      loadMonthlyChart(rows);
+      await loadMonthlyChart();
     }
 
     function findLastUpdated(rows) {
@@ -410,7 +410,6 @@
         }
       });
 
-      // Only keep the first Assessor and first Signaller
       const seen = new Set();
       const filtered = roleRows.filter(item => {
         if (seen.has(item.role)) return false;
@@ -512,64 +511,77 @@
       btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
     }
 
-function loadMonthlyChart(rows) {
-  const labels = [];
-  const values = [];
+    async function loadMonthlyChart() {
+      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+      const query = encodeURIComponent("select A, B offset 30 limit 12");
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${query}`;
 
-  rows.forEach(row => {
-    const month = row.c[0]?.v?.toString().trim();
-    const amount = row.c[1]?.v;
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+      const rows = json.table.rows;
 
-    // Only grab rows that look like months
-    if (!month || amount == null) return;
+      const labels = [];
+      const values = [];
 
-    // Detect month rows (they contain ' or numbers like Jan/Feb/etc)
-    if (!/[A-Za-z]/.test(month)) return;
+      rows.forEach(row => {
+        const month = row.c[0]?.v?.toString().trim();
+        const amount = row.c[1]?.v;
 
-    labels.push(month);
-    values.push(Number(amount));
-  });
+        if (!month || amount == null) return;
 
-  const ctx = document.getElementById("monthly-trainings-chart").getContext("2d");
+        labels.push(month);
+        values.push(Number(amount));
+      });
 
-  if (monthlyChart) {
-    monthlyChart.destroy();
-  }
+      const ctx = document.getElementById("monthly-trainings-chart").getContext("2d");
 
-  monthlyChart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Trainings",
-        data: values,
-        backgroundColor: "#d84340",
-        borderRadius: 6
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        x: {
-          ticks: { color: "#ccc" },
-          grid: { color: "rgba(255,255,255,0.05)" }
-        },
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: "#ccc",
-            precision: 0
-          },
-          grid: { color: "rgba(255,255,255,0.05)" }
-        }
+      if (monthlyChart) {
+        monthlyChart.destroy();
       }
+
+      monthlyChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Trainings",
+            data: values,
+            backgroundColor: "#d84340",
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#ccc"
+              },
+              grid: {
+                color: "rgba(255,255,255,0.05)"
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#ccc",
+                precision: 0
+              },
+              grid: {
+                color: "rgba(255,255,255,0.05)"
+              }
+            }
+          }
+        }
+      });
     }
-  });
-}
 
     loadQDData();
   </script>
