@@ -103,9 +103,9 @@
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 25px;
-      align-items: stretch;
+      align-items: start;
     }
 
     .left-column {
@@ -114,23 +114,11 @@
       gap: 25px;
     }
 
-    .right-column {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
     .table-box {
       padding: 30px;
       background: #1a1a1a;
       border-radius: 18px;
       text-align: left;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .right-column .table-box {
-      height: 100%;
     }
 
     .table-box h2 {
@@ -195,6 +183,16 @@
       padding: 0;
     }
 
+    .updated {
+      text-align: center;
+      margin-top: 15px;
+      color: #888;
+    }
+
+    .updated b {
+      color: white;
+    }
+
     .show-more-wrap {
       text-align: center;
       margin-top: 18px;
@@ -207,6 +205,7 @@
       background: #2a2a2a;
       color: white;
       cursor: pointer;
+      transition: 0.2s;
     }
 
     .show-more-btn:hover {
@@ -219,7 +218,7 @@
 
     .chart-wrap {
       width: 100%;
-      height: 320px;
+      height: 280px;
       position: relative;
     }
 
@@ -240,42 +239,66 @@
 
 <body>
 
-<div class="content">
+  <div class="navbar">
+    <div><a href="index.html">🏠 Home</a></div>
+    <div>
+      <a href="scr.html">SCR Data</a>
+      <a href="shifts.html">Shifts + Events Data</a>
+      <a href="signalling.html">Signalling</a>
+    </div>
+  </div>
 
-  <div class="dashboard-grid">
+  <div class="content">
+    <h1 class="page-title">Qualified Driver Data</h1>
 
-    <!-- LEFT -->
-    <div class="left-column">
+    <div class="overview">
+      <h2>Overview</h2>
+      <p>This page contains detailed Qualified Driver training data and role counts.</p>
+      <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
+    </div>
 
-      <div class="table-box">
-        <h2>Role Count</h2>
+    <div class="training-buttons">
+      <a href="all.html"><button>ALL</button></a>
+      <a href="qd.html"><button>QD</button></a>
+      <a href="ds.html"><button>DS</button></a>
+      <a href="gd.html"><button>GD</button></a>
+      <a href="sg.html"><button>SG</button></a>
+    </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Role</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="role-body"></tbody>
-        </table>
-      </div>
+    <div class="dashboard-grid">
 
-      <div class="table-box">
-        <h2>Monthly Trainings</h2>
-        <div class="chart-wrap">
-          <canvas id="monthly-trainings-chart"></canvas>
+      <div class="left-column">
+        <div class="table-box">
+          <h2>Role Count</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="role-body">
+              <tr>
+                <td colspan="2">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-box">
+          <h2>Monthly Trainings</h2>
+          <div class="chart-wrap">
+            <canvas id="monthly-trainings-chart"></canvas>
+          </div>
+          <p class="chart-note">Trainings completed per month.</p>
         </div>
       </div>
 
-    </div>
-
-    <!-- RIGHT -->
-    <div class="right-column">
       <div class="table-box">
         <h2>Top Supervisors</h2>
 
-        <table>
+        <table class="leaderboard-table">
           <thead>
             <tr>
               <th>Position</th>
@@ -283,111 +306,285 @@
               <th>How many</th>
             </tr>
           </thead>
-          <tbody id="leaderboard-body"></tbody>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="3">Loading data...</td>
+            </tr>
+          </tbody>
         </table>
 
         <div class="show-more-wrap">
-          <button id="show-more-btn" onclick="toggleMoreRows()">Show more</button>
+          <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
+            Show more
+          </button>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 
-</div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let expandedLeaderboard = false;
+    let monthlyChart = null;
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    async function loadQDData() {
+      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
 
-<script>
-const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+      const rows = json.table.rows;
 
-async function fetchRange(range) {
-  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json;headers=0&range=${range}`;
-  const res = await fetch(url);
-  const text = await res.text();
-  return JSON.parse(text.substr(47).slice(0, -2)).table.rows;
-}
+      const lastUpdated = findLastUpdated(rows);
+      document.getElementById("last-updated").textContent = lastUpdated;
 
-/* ROLE COUNT FIX */
-async function loadRoles() {
-  const rows = await fetchRange("A12:B13");
-  const tbody = document.getElementById("role-body");
-
-  tbody.innerHTML = `
-    <tr>
-      <td class="assessor">${rows[0]?.c?.[0]?.v || "Assessor"}</td>
-      <td>${rows[0]?.c?.[1]?.v || "N/A"}</td>
-    </tr>
-    <tr>
-      <td class="signaller">${rows[1]?.c?.[0]?.v || "Signaller"}</td>
-      <td>${rows[1]?.c?.[1]?.v || "N/A"}</td>
-    </tr>
-  `;
-}
-
-/* LEADERBOARD FIX */
-async function loadLeaderboard() {
-  const rows = await fetchRange("A17:C26");
-  const tbody = document.getElementById("leaderboard-body");
-
-  tbody.innerHTML = "";
-
-  rows.forEach((row, i) => {
-    const hidden = i >= 5 ? "hidden-row extra-row" : "";
-
-    tbody.innerHTML += `
-      <tr class="${hidden}">
-        <td>${row.c?.[0]?.v}</td>
-        <td>${row.c?.[1]?.v}</td>
-        <td>${row.c?.[2]?.v}</td>
-      </tr>
-    `;
-  });
-}
-
-/* GRAPH FIX */
-async function loadChart() {
-  const rows = await fetchRange("A31:B42");
-
-  const labels = [];
-  const values = [];
-
-  rows.forEach(r => {
-    if (r.c?.[0]?.v && r.c?.[1]?.v != null) {
-      labels.push(r.c[0].v);
-      values.push(Number(r.c[1].v));
+      loadRoleCount(rows);
+      loadLeaderboard(rows);
+      await loadMonthlyChart();
     }
-  });
 
-  new Chart(document.getElementById("monthly-trainings-chart"), {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        data: values,
-        backgroundColor: "#d84340"
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: "#ccc" } },
-        y: { ticks: { color: "#ccc" }, beginAtZero: true }
+    function findLastUpdated(rows) {
+      for (const row of rows) {
+        const label = row.c[5]?.v?.toString().trim();
+        const value = row.c[6]?.v;
+
+        if (label === "LAST UPDATED" && value) {
+          const match = value.match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+
+          if (match) {
+            const year = parseInt(match[1], 10);
+            const month = parseInt(match[2], 10);
+            const day = parseInt(match[3], 10);
+            const hour = parseInt(match[4] || 0, 10);
+            const minute = parseInt(match[5] || 0, 10);
+            const second = parseInt(match[6] || 0, 10);
+
+            const date = new Date(year, month, day, hour, minute, second);
+
+            const formatted =
+              date.toLocaleDateString("en-GB") + " " +
+              date.toLocaleTimeString("en-GB", { hour12: false });
+
+            return `${formatted} (${timeAgo(date)})`;
+          }
+
+          return value;
+        }
+      }
+      return "Not available";
+    }
+
+    function timeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+
+      const seconds = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const months = Math.floor(days / 30);
+      const years = Math.floor(days / 365);
+
+      if (years > 0) return years === 1 ? "1 year ago" : `${years} years ago`;
+      if (months > 0) return months === 1 ? "1 month ago" : `${months} months ago`;
+      if (days > 0) return days === 1 ? "1 day ago" : `${days} days ago`;
+      if (hours > 0) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+      if (minutes > 0) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+      return "just now";
+    }
+
+    function loadRoleCount(rows) {
+      const tbody = document.getElementById("role-body");
+      tbody.innerHTML = "";
+
+      const roleRows = [];
+
+      rows.forEach(row => {
+        const role = row.c[0]?.v?.toString().trim();
+        const total = row.c[1]?.v ?? "N/A";
+
+        if (role === "Assessor" || role === "Signaller") {
+          roleRows.push({ role, total });
+        }
+      });
+
+      const seen = new Set();
+      const filtered = roleRows.filter(item => {
+        if (seen.has(item.role)) return false;
+        seen.add(item.role);
+        return true;
+      });
+
+      filtered.forEach(item => {
+        const cls = item.role === "Assessor" ? "assessor" : "signaller";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="${cls}">${item.role}</td>
+          <td>${item.total}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function parseUsername(rawUsername) {
+      const raw = (rawUsername || "").toString().trim();
+
+      if (raw.startsWith("[M]")) {
+        return {
+          display: raw.replace(/^\[M\]\s*/, ""),
+          className: "manager"
+        };
+      }
+
+      if (raw.startsWith("[R]")) {
+        return {
+          display: raw.replace(/^\[R\]\s*/, ""),
+          className: "retired"
+        };
+      }
+
+      return {
+        display: raw,
+        className: "normal-user"
+      };
+    }
+
+    function loadLeaderboard(rows) {
+      const tbody = document.getElementById("leaderboard-body");
+      const showMoreBtn = document.getElementById("show-more-btn");
+      tbody.innerHTML = "";
+
+      const leaderboardRows = [];
+
+      rows.forEach(row => {
+        const position = row.c[0]?.v;
+        const usernameRaw = row.c[1]?.v;
+        const howMany = row.c[2]?.v;
+
+        if (position == null || !usernameRaw || howMany == null) return;
+
+        const usernameText = usernameRaw.toString().trim();
+
+        if (!/^\d+$/.test(String(position))) return;
+
+        leaderboardRows.push({
+          position,
+          usernameRaw: usernameText,
+          howMany
+        });
+      });
+
+      leaderboardRows.forEach((entry, index) => {
+        const parsed = parseUsername(entry.usernameRaw);
+        const hiddenClass = index >= 5 ? "hidden-row extra-row" : "";
+
+        const tr = document.createElement("tr");
+        tr.className = hiddenClass;
+        tr.innerHTML = `
+          <td>${entry.position}</td>
+          <td><span class="leaderboard-name ${parsed.className}">${parsed.display}</span></td>
+          <td>${entry.howMany}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (leaderboardRows.length > 5) {
+        showMoreBtn.style.display = "inline-block";
+        showMoreBtn.textContent = "Show more";
+      } else {
+        showMoreBtn.style.display = "none";
       }
     }
-  });
-}
 
-function toggleMoreRows() {
-  document.querySelectorAll(".extra-row").forEach(r => {
-    r.style.display = r.style.display === "table-row" ? "none" : "table-row";
-  });
-}
+    function toggleMoreRows() {
+      const extraRows = document.querySelectorAll(".extra-row");
+      const btn = document.getElementById("show-more-btn");
 
-loadRoles();
-loadLeaderboard();
-loadChart();
-</script>
+      expandedLeaderboard = !expandedLeaderboard;
+
+      extraRows.forEach(row => {
+        row.style.display = expandedLeaderboard ? "table-row" : "none";
+      });
+
+      btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
+    }
+
+    async function loadMonthlyChart() {
+      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+      const query = encodeURIComponent("select A, B offset 30 limit 12");
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${query}`;
+
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+      const rows = json.table.rows;
+
+      const labels = [];
+      const values = [];
+
+      rows.forEach(row => {
+        const month = row.c[0]?.v?.toString().trim();
+        const amount = row.c[1]?.v;
+
+        if (!month || amount == null) return;
+
+        labels.push(month);
+        values.push(Number(amount));
+      });
+
+      const ctx = document.getElementById("monthly-trainings-chart").getContext("2d");
+
+      if (monthlyChart) {
+        monthlyChart.destroy();
+      }
+
+      monthlyChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Trainings",
+            data: values,
+            backgroundColor: "#d84340",
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#ccc"
+              },
+              grid: {
+                color: "rgba(255,255,255,0.05)"
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#ccc",
+                precision: 0
+              },
+              grid: {
+                color: "rgba(255,255,255,0.05)"
+              }
+            }
+          }
+        }
+      });
+    }
+
+    loadQDData();
+  </script>
 
 </body>
 </html>
