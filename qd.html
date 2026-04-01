@@ -1,1 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Qualified Driver Data</title>
 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background: #111;
+    }
+
+    .navbar a {
+      color: #ccc;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .navbar a:hover {
+      color: white;
+    }
+
+    /* PAGE */
+    .content {
+      padding: 50px 20px 80px;
+    }
+
+    .page-title {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #d84340;
+    }
+
+    /* OVERVIEW */
+    .overview {
+      max-width: 800px;
+      margin: 30px auto 20px;
+      text-align: center;
+    }
+
+    .overview h2 {
+      font-size: 38px;
+      margin-bottom: 15px;
+      color: #f2b3b1;
+    }
+
+    .overview p {
+      color: #bbb;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .overview .updated {
+      color: #888;
+    }
+
+    .overview .updated b {
+      color: white;
+    }
+
+    .overview::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: #d84340;
+      margin: 20px auto 0;
+    }
+
+    /* TABLE BOX */
+    .table-box {
+      max-width: 950px;
+      margin: 30px auto;
+      padding: 30px;
+      background: #1a1a1a;
+      border-radius: 18px;
+      text-align: left;
+    }
+
+    .table-box h2 {
+      font-size: 34px;
+      margin-bottom: 20px;
+      color: #f2b3b1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    th {
+      color: #d84340;
+      font-weight: bold;
+    }
+
+    td {
+      color: #ddd;
+    }
+
+    /* ROLE COLOURS */
+    .assessor {
+      color: #d84340;
+      font-weight: bold;
+    }
+
+    .signaller {
+      color: #12af86;
+      font-weight: bold;
+    }
+
+    .updated {
+      text-align: center;
+      margin-top: 15px;
+      color: #888;
+    }
+
+    .updated b {
+      color: white;
+    }
+
+    /* PAGE BUTTONS */
+    .training-buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .training-buttons a {
+      text-decoration: none;
+    }
+
+    .training-buttons button {
+      margin: 5px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+    }
+
+    .training-buttons button:hover {
+      background: #d84340;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div><a href="index.html">🏠 Home</a></div>
+    <div>
+      <a href="scr.html">SCR Data</a>
+      <a href="shifts.html">Shifts + Events Data</a>
+      <a href="signalling.html">Signalling</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">Qualified Driver Data</h1>
+
+    <!-- OVERVIEW -->
+    <div class="overview">
+      <h2>Overview</h2>
+      <p>This page contains detailed Qualified Driver training data and role counts.</p>
+      <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
+    </div>
+
+    <!-- NAV BUTTONS -->
+    <div class="training-buttons">
+      <a href="all.html"><button>ALL</button></a>
+      <a href="qd.html"><button>QD</button></a>
+      <a href="ds.html"><button>DS</button></a>
+      <a href="gd.html"><button>GD</button></a>
+      <a href="sg.html"><button>SG</button></a>
+    </div>
+
+    <!-- ROLE COUNT -->
+    <div class="table-box">
+      <h2>Role Count</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="role-body">
+          <tr>
+            <td colspan="2">Loading data...</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="updated">Data updated: <b id="data-updated">Loading...</b></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("last-updated").textContent =
+      new Date().toLocaleDateString("en-GB");
+
+    async function loadQDRoleData() {
+      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
+
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+
+      const rows = json.table.rows;
+      const tbody = document.getElementById("role-body");
+      tbody.innerHTML = "";
+
+      rows.forEach((row, index) => {
+        // Looking for rows 12 and 13 equivalent data:
+        // Assessor / N/A
+        // Signaller / 32
+        const role = row.c[0]?.v?.toString().trim();
+        const total = row.c[1]?.v ?? "N/A";
+
+        if (!role) return;
+        if (role === "Assessor" || role === "Signaller") {
+          let cls = "";
+          if (role === "Assessor") cls = "assessor";
+          if (role === "Signaller") cls = "signaller";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="${cls}">${role}</td>
+            <td>${total}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+
+      document.getElementById("data-updated").textContent =
+        new Date().toLocaleString("en-GB");
+    }
+
+    loadQDRoleData();
+  </script>
+
+</body>
+</html>
