@@ -1,1 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dispatcher Data</title>
 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background: #111;
+    }
+
+    .navbar a {
+      color: #ccc;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .navbar a:hover {
+      color: white;
+    }
+
+    .content {
+      padding: 50px 20px 80px;
+    }
+
+    .page-title {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #eb842d;
+    }
+
+    .overview {
+      max-width: 800px;
+      margin: 30px auto 20px;
+      text-align: center;
+    }
+
+    .overview h2 {
+      font-size: 38px;
+      margin-bottom: 15px;
+      color: #f4c29a;
+    }
+
+    .overview p {
+      color: #bbb;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .overview .updated {
+      color: #888;
+    }
+
+    .overview .updated b {
+      color: white;
+    }
+
+    .overview::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: #eb842d;
+      margin: 20px auto 0;
+    }
+
+    .training-buttons {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    .training-buttons a {
+      text-decoration: none;
+    }
+
+    .training-buttons button {
+      margin: 5px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .training-buttons button:hover {
+      background: #eb842d;
+    }
+
+    .dashboard-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 25px;
+      align-items: start;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .table-box {
+      padding: 30px;
+      background: #1a1a1a;
+      border-radius: 18px;
+      text-align: left;
+    }
+
+    .table-box h2 {
+      font-size: 34px;
+      margin-bottom: 20px;
+      color: #60a5fa;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    th {
+      color: #eb842d;
+      font-weight: bold;
+    }
+
+    td {
+      color: #ddd;
+    }
+
+    .assessor {
+      color: #21d6d1;
+      font-weight: bold;
+    }
+
+    .guard {
+      color: #ebbc25;
+      font-weight: bold;
+    }
+
+    .signaller {
+      color: #12af86;
+      font-weight: bold;
+    }
+
+    .leaderboard-table th {
+      color: #eb842d;
+    }
+
+    .leaderboard-name {
+      font-weight: bold;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .manager {
+      background: rgba(37, 99, 235, 0.22);
+      color: #93c5fd;
+    }
+
+    .retired {
+      background: rgba(255,255,255,0.08);
+      color: #b8b8b8;
+    }
+
+    .normal-user {
+      color: #ddd;
+      background: transparent;
+      padding: 0;
+    }
+
+    .updated {
+      text-align: center;
+      margin-top: 15px;
+      color: #888;
+    }
+
+    .updated b {
+      color: white;
+    }
+
+    .show-more-wrap {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .show-more-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .show-more-btn:hover {
+      background: #eb842d;
+    }
+
+    .hidden-row {
+      display: none;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      height: 280px;
+      position: relative;
+    }
+
+    .chart-note {
+      margin-top: 12px;
+      color: #888;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 950px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div><a href="index.html">🏠 Home</a></div>
+    <div>
+      <a href="scr.html">SCR Data</a>
+      <a href="shifts.html">Shifts + Events Data</a>
+      <a href="signalling.html">Signalling</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">Dispatcher Data</h1>
+
+    <div class="overview">
+      <h2>Overview</h2>
+      <p>This page contains detailed Dispatcher training data and role counts.</p>
+      <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
+    </div>
+
+    <div class="training-buttons">
+      <a href="all.html"><button>ALL</button></a>
+      <a href="qd.html"><button>QD</button></a>
+      <a href="ds.html"><button>DS</button></a>
+      <a href="gd.html"><button>GD</button></a>
+      <a href="sg.html"><button>SG</button></a>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="left-column">
+
+        <div class="table-box">
+          <h2>Role Count</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody id="role-body">
+              <tr>
+                <td colspan="2">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-box">
+          <h2>Monthly Trainings</h2>
+          <div class="chart-wrap">
+            <canvas id="monthly-trainings-chart"></canvas>
+          </div>
+          <p class="chart-note">Trainings completed per month.</p>
+        </div>
+
+      </div>
+
+      <div class="table-box">
+        <h2>Top Supervisors</h2>
+
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Username</th>
+              <th>How many</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="3">Loading data...</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="show-more-wrap">
+          <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
+            Show more
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+    let expandedLeaderboard = false;
+    let monthlyChart = null;
+
+    async function fetchSheetRange(range) {
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(range)}`;
+      const res = await fetch(url);
+      const text = await res.text();
+      return JSON.parse(text.substr(47).slice(0, -2));
+    }
+
+    async function loadDSData() {
+      try {
+        const [updatedJson, roleJson, leaderboardJson, monthlyJson] = await Promise.all([
+          fetchSheetRange("F2:G2"),
+          fetchSheetRange("A46:B49"),
+          fetchSheetRange("A52:C62"),
+          fetchSheetRange("A66:B")
+        ]);
+
+        document.getElementById("last-updated").textContent = parseLastUpdated(updatedJson.table.rows);
+        loadRoleCount(roleJson.table.rows);
+        loadLeaderboard(leaderboardJson.table.rows);
+        loadMonthlyChart(monthlyJson.table.rows);
+      } catch (error) {
+        console.error(error);
+        document.getElementById("last-updated").textContent = "Failed to load";
+        document.getElementById("role-body").innerHTML = '<tr><td colspan="2">Failed to load data.</td></tr>';
+        document.getElementById("leaderboard-body").innerHTML = '<tr><td colspan="3">Failed to load data.</td></tr>';
+      }
+    }
+
+    function parseLastUpdated(rows) {
+      const value = rows?.[0]?.c?.[1]?.v;
+      if (!value) return "Not available";
+
+      const match = String(value).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+
+      if (!match) return String(value);
+
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const day = parseInt(match[3], 10);
+      const hour = parseInt(match[4] || 0, 10);
+      const minute = parseInt(match[5] || 0, 10);
+      const second = parseInt(match[6] || 0, 10);
+
+      const date = new Date(year, month, day, hour, minute, second);
+
+      const formatted =
+        date.toLocaleDateString("en-GB") + " " +
+        date.toLocaleTimeString("en-GB", { hour12: false });
+
+      return `${formatted} (${timeAgo(date)})`;
+    }
+
+    function timeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+
+      const seconds = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const months = Math.floor(days / 30);
+      const years = Math.floor(days / 365);
+
+      if (years > 0) return years === 1 ? "1 year ago" : `${years} years ago`;
+      if (months > 0) return months === 1 ? "1 month ago" : `${months} months ago`;
+      if (days > 0) return days === 1 ? "1 day ago" : `${days} days ago`;
+      if (hours > 0) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+      if (minutes > 0) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+      return "just now";
+    }
+
+    function loadRoleCount(rows) {
+      const tbody = document.getElementById("role-body");
+      tbody.innerHTML = "";
+
+      rows.forEach(row => {
+        const position = row.c?.[0]?.v?.toString().trim();
+        const total = row.c?.[1]?.v ?? "N/A";
+
+        if (!position || position === "Position") return;
+
+        let cls = "";
+        if (position === "Assessor") cls = "assessor";
+        if (position === "Guard") cls = "guard";
+        if (position === "Signaller") cls = "signaller";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="${cls}">${position}</td>
+          <td>${total}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function parseUsername(rawUsername) {
+      const raw = (rawUsername || "").toString().trim();
+
+      if (raw.startsWith("[M]")) {
+        return {
+          display: raw.replace(/^\[M\]\s*/, ""),
+          className: "manager"
+        };
+      }
+
+      if (raw.startsWith("[R]")) {
+        return {
+          display: raw.replace(/^\[R\]\s*/, ""),
+          className: "retired"
+        };
+      }
+
+      return {
+        display: raw,
+        className: "normal-user"
+      };
+    }
+
+    function loadLeaderboard(rows) {
+      const tbody = document.getElementById("leaderboard-body");
+      const showMoreBtn = document.getElementById("show-more-btn");
+      tbody.innerHTML = "";
+
+      const leaderboardRows = [];
+
+      rows.forEach(row => {
+        const position = row.c?.[0]?.v;
+        const usernameRaw = row.c?.[1]?.v;
+        const howMany = row.c?.[2]?.v;
+
+        if (position == null || !usernameRaw || howMany == null) return;
+        if (String(position).trim() === "Position") return;
+
+        leaderboardRows.push({
+          position,
+          usernameRaw: String(usernameRaw).trim(),
+          howMany
+        });
+      });
+
+      leaderboardRows.forEach((entry, index) => {
+        const parsed = parseUsername(entry.usernameRaw);
+        const hiddenClass = index >= 5 ? "hidden-row extra-row" : "";
+
+        const tr = document.createElement("tr");
+        tr.className = hiddenClass;
+        tr.innerHTML = `
+          <td>${entry.position}</td>
+          <td><span class="leaderboard-name ${parsed.className}">${parsed.display}</span></td>
+          <td>${entry.howMany}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (leaderboardRows.length > 5) {
+        showMoreBtn.style.display = "inline-block";
+        showMoreBtn.textContent = "Show more";
+      } else {
+        showMoreBtn.style.display = "none";
+      }
+    }
+
+    function toggleMoreRows() {
+      const extraRows = document.querySelectorAll(".extra-row");
+      const btn = document.getElementById("show-more-btn");
+
+      expandedLeaderboard = !expandedLeaderboard;
+
+      extraRows.forEach(row => {
+        row.style.display = expandedLeaderboard ? "table-row" : "none";
+      });
+
+      btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
+    }
+
+    function loadMonthlyChart(rows) {
+      const labels = [];
+      const values = [];
+
+      rows.forEach(row => {
+        const month = row.c?.[0]?.v?.toString().trim();
+        const amount = row.c?.[1]?.v;
+
+        if (!month || amount == null || amount === "" || month === "month") return;
+
+        labels.push(month);
+        values.push(Number(amount));
+      });
+
+      const ctx = document.getElementById("monthly-trainings-chart").getContext("2d");
+
+      if (monthlyChart) {
+        monthlyChart.destroy();
+      }
+
+      monthlyChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Trainings",
+            data: values,
+            backgroundColor: "#eb842d",
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#ccc"
+              },
+              grid: {
+                color: "rgba(255,255,255,0.05)"
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#ccc",
+                precision: 0
+              },
+              grid: {
+                color: "rgba(255,255,255,0.05)"
+              }
+            }
+          }
+        }
+      });
+    }
+
+    loadDSData();
+  </script>
+
+</body>
+</html>
