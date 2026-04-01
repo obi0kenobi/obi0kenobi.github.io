@@ -85,20 +85,29 @@
       transition: 0.2s;
     }
 
-    .time-box {
-  display: inline-block;
-  background: #1a1a1a;
-  padding: 12px 25px;
-  border-radius: 25px;
-  font-weight: bold;
-  color: #fff;
-  font-size: 16px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.05);
-  transition: 0.2s;
+.time-container {
+  margin-top: 40px;
+  text-align: center;
 }
 
-.time-box:hover {
-  box-shadow: 0 0 15px rgba(255,255,255,0.15);
+.time-label {
+  color: #aaa;
+  font-size: 14px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.time-box {
+  display: inline-block;
+  background: linear-gradient(135deg, #1a1a1a, #222);
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #ebbc25; /* your theme yellow */
+  box-shadow: 0 0 15px rgba(235, 188, 37, 0.15);
+  letter-spacing: 1px;
+  transition: 0.3s;
 }
 
     .card:hover {
@@ -180,7 +189,10 @@
 
     <!-- spacing fixed -->
 <div style="margin-top: 40px;">
-  <div id="live-time" class="time-box">Loading time...</div>
+  <div class="time-container">
+  <div class="time-label">My Current Time</div>
+  <div id="live-time" class="time-box">Loading...</div>
+</div>
 </div>
   </div>
 
@@ -216,18 +228,17 @@
   function updateTime() {
     const now = new Date();
 
-    const formatted =
-      now.toLocaleDateString("en-GB") + " " +
-      now.toLocaleTimeString("en-GB", { hour12: false });
+    const time = now.toLocaleTimeString("en-GB", {
+      hour12: false
+    });
 
-    // 👇 manually set location (no tracking involved)
-    const locationLabel = " (Melbourne, AU)";
-
-    document.getElementById("live-time").textContent = formatted + locationLabel;
+    document.getElementById("live-time").textContent =
+      time + " (Melbourne, AU)";
   }
 
   updateTime();
   setInterval(updateTime, 1000);
+</script>
 </script>
 </body>
 </html>
