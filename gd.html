@@ -421,7 +421,6 @@ canvas {
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
-    let expandedLeaderboard = false;
     let monthlyChart = null;
     let traineeChart = null;
     let rolePieChart = null;
@@ -572,18 +571,6 @@ function loadLeaderboard(rows) {
   });
 }
 
-    function toggleMoreRows() {
-      const extraRows = document.querySelectorAll(".extra-row");
-      const btn = document.getElementById("show-more-btn");
-
-      expandedLeaderboard = !expandedLeaderboard;
-
-      extraRows.forEach(row => {
-        row.style.display = expandedLeaderboard ? "table-row" : "none";
-      });
-
-      btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
-    }
 
     function loadMonthlyChart(rows) {
       const labels = [];
