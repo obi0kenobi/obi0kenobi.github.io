@@ -100,14 +100,24 @@
       color: #111;
     }
 
-    .dashboard-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 25px;
-      align-items: start;
-    }
+.dashboard-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 25px;
+  align-items: start;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.right-column .table-box {
+  height: 100%;
+}
 
     .left-column {
       display: flex;
@@ -355,31 +365,32 @@
 
       </div>
 
-      <div class="table-box">
-        <h2>Top Supervisors</h2>
+<div class="right-column">
+  <div class="table-box">
+    <h2>Top Supervisors</h2>
 
-        <table class="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Username</th>
-              <th>How many</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboard-body">
-            <tr>
-              <td colspan="3">Loading data...</td>
-            </tr>
-          </tbody>
-        </table>
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Position</th>
+          <th>Username</th>
+          <th>How many</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <tr>
+          <td colspan="3">Loading data...</td>
+        </tr>
+      </tbody>
+    </table>
 
-        <div class="show-more-wrap">
-          <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
-            Show more
-          </button>
-        </div>
-      </div>
+    <div class="show-more-wrap">
+      <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
+        Show more
+      </button>
     </div>
+  </div>
+</div>
 
     <div class="table-box full-width">
       <h2>Monthly Trainings</h2>
@@ -670,15 +681,26 @@ function loadTraineeChart(rows) {
         backgroundColor: ["#12af86", "#d84340"]
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: { color: "#ddd" }
+options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "bottom",
+      labels: {
+        color: "#ddd",
+        usePointStyle: true,
+        pointStyle: "circle",
+        boxWidth: 10,
+        boxHeight: 10,
+        padding: 18,
+        font: {
+          size: 13
         }
       }
     }
+  }
+}
   });
 }
 
