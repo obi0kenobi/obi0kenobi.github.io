@@ -216,11 +216,11 @@
       display: none;
     }
 
-    .chart-wrap {
-      position: relative;
-      width: 100%;
-      min-height: 320px;
-    }
+.chart-wrap {
+  width: 100%;
+  height: 280px;
+  position: relative;
+}
 
     .chart-note {
       margin-top: 12px;
@@ -512,73 +512,64 @@
       btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
     }
 
-    function loadMonthlyChart(rows) {
-      const labels = [];
-      const values = [];
+function loadMonthlyChart(rows) {
+  const labels = [];
+  const values = [];
 
-      rows.forEach(row => {
-        const month = row.c[0]?.v?.toString().trim();
-        const amount = row.c[1]?.v;
+  rows.forEach(row => {
+    const month = row.c[0]?.v?.toString().trim();
+    const amount = row.c[1]?.v;
 
-        if (!month || amount == null) return;
+    // Only grab rows that look like months
+    if (!month || amount == null) return;
 
-        const validMonths = [
-          "Dec '24", "Jan '25", "Feb '25", "Mar '25", "April '25", "May '25",
-          "June '25", "July '25", "Aug '25", "Sep '25", "Oct '25", "Nov '25"
-        ];
+    // Detect month rows (they contain ' or numbers like Jan/Feb/etc)
+    if (!/[A-Za-z]/.test(month)) return;
 
-        if (!validMonths.includes(month)) return;
+    labels.push(month);
+    values.push(Number(amount));
+  });
 
-        labels.push(month);
-        values.push(Number(amount));
-      });
+  const ctx = document.getElementById("monthly-trainings-chart").getContext("2d");
 
-      const ctx = document.getElementById("monthly-trainings-chart").getContext("2d");
+  if (monthlyChart) {
+    monthlyChart.destroy();
+  }
 
-      if (monthlyChart) {
-        monthlyChart.destroy();
-      }
-
-      monthlyChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: labels,
-          datasets: [{
-            label: "Trainings",
-            data: values
-          }]
+  monthlyChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Trainings",
+        data: values,
+        backgroundColor: "#d84340",
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          ticks: { color: "#ccc" },
+          grid: { color: "rgba(255,255,255,0.05)" }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: "#ccc",
+            precision: 0
           },
-          scales: {
-            x: {
-              ticks: {
-                color: "#ddd"
-              },
-              grid: {
-                color: "rgba(255,255,255,0.06)"
-              }
-            },
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: "#ddd",
-                precision: 0
-              },
-              grid: {
-                color: "rgba(255,255,255,0.06)"
-              }
-            }
-          }
+          grid: { color: "rgba(255,255,255,0.05)" }
         }
-      });
+      }
     }
+  });
+}
 
     loadQDData();
   </script>
