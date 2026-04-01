@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Qualified Driver Training Data</title>
+  <title>Qualified Driver Data</title>
 
   <style>
     body {
@@ -12,7 +12,6 @@
       text-align: center;
     }
 
-    /* NAVBAR */
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -30,7 +29,6 @@
       color: white;
     }
 
-    /* PAGE */
     .content {
       padding: 50px 20px 80px;
     }
@@ -41,7 +39,6 @@
       color: #d84340;
     }
 
-    /* OVERVIEW */
     .overview {
       max-width: 800px;
       margin: 30px auto 20px;
@@ -77,20 +74,52 @@
       margin: 20px auto 0;
     }
 
-    /* TABLE BOX */
+    .training-buttons {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    .training-buttons a {
+      text-decoration: none;
+    }
+
+    .training-buttons button {
+      margin: 5px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .training-buttons button:hover {
+      background: #d84340;
+    }
+
+    .dashboard-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 25px;
+      align-items: start;
+    }
+
     .table-box {
-      max-width: 950px;
-      margin: 30px auto;
       padding: 30px;
       background: #1a1a1a;
       border-radius: 18px;
       text-align: left;
+      min-height: 100%;
     }
 
     .table-box h2 {
       font-size: 34px;
       margin-bottom: 20px;
-      color: #f2b3b1;
+      color: #60a5fa;
     }
 
     table {
@@ -112,7 +141,6 @@
       color: #ddd;
     }
 
-    /* ROLE COLOURS */
     .assessor {
       color: #21d6d1;
       font-weight: bold;
@@ -121,6 +149,33 @@
     .signaller {
       color: #12af86;
       font-weight: bold;
+    }
+
+    .leaderboard-table th {
+      color: #d84340;
+    }
+
+    .leaderboard-name {
+      font-weight: bold;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .manager {
+      background: rgba(37, 99, 235, 0.22);
+      color: #93c5fd;
+    }
+
+    .retired {
+      background: rgba(255,255,255,0.08);
+      color: #b8b8b8;
+    }
+
+    .normal-user {
+      color: #ddd;
+      background: transparent;
+      padding: 0;
     }
 
     .updated {
@@ -133,35 +188,39 @@
       color: white;
     }
 
-    /* PAGE BUTTONS */
-    .training-buttons {
+    .show-more-wrap {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 18px;
     }
 
-    .training-buttons a {
-      text-decoration: none;
-    }
-
-    .training-buttons button {
-      margin: 5px;
-      padding: 8px 14px;
+    .show-more-btn {
+      padding: 8px 16px;
       border-radius: 20px;
       border: none;
       background: #2a2a2a;
       color: white;
       cursor: pointer;
+      transition: 0.2s;
     }
 
-    .training-buttons button:hover {
+    .show-more-btn:hover {
       background: #d84340;
+    }
+
+    .hidden-row {
+      display: none;
+    }
+
+    @media (max-width: 950px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
   <div class="navbar">
     <div><a href="index.html">🏠 Home</a></div>
     <div>
@@ -174,14 +233,12 @@
   <div class="content">
     <h1 class="page-title">Qualified Driver Data</h1>
 
-    <!-- OVERVIEW -->
     <div class="overview">
       <h2>Overview</h2>
       <p>This page contains detailed Qualified Driver training data and role counts.</p>
       <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
     </div>
 
-    <!-- NAV BUTTONS -->
     <div class="training-buttons">
       <a href="all.html"><button>ALL</button></a>
       <a href="qd.html"><button>QD</button></a>
@@ -190,52 +247,91 @@
       <a href="sg.html"><button>SG</button></a>
     </div>
 
-    <!-- ROLE COUNT -->
-    <div class="table-box">
-      <h2>Role Count</h2>
+    <div class="dashboard-grid">
 
-      <table>
-        <thead>
-          <tr>
-            <th>Role</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody id="role-body">
-          <tr>
-            <td colspan="2">Loading data...</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-box">
+        <h2>Role Count</h2>
 
-      <p class="updated">Data updated: <b id="data-updated">Loading...</b></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="role-body">
+            <tr>
+              <td colspan="2">Loading data...</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="updated">Data updated: <b id="role-updated">Loading...</b></p>
+      </div>
+
+      <div class="table-box">
+        <h2>Top Supervisors</h2>
+
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Username</th>
+              <th>How many</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr>
+              <td colspan="3">Loading data...</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="show-more-wrap">
+          <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
+            Show more
+          </button>
+        </div>
+
+        <p class="updated">Data updated: <b id="leaderboard-updated">Loading...</b></p>
+      </div>
+
     </div>
   </div>
 
   <script>
+    let expandedLeaderboard = false;
+
     document.getElementById("last-updated").textContent =
       new Date().toLocaleDateString("en-GB");
 
-    async function loadQDRoleData() {
+    async function loadQDData() {
       const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
       const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
 
       const res = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.substr(47).slice(0, -2));
-
       const rows = json.table.rows;
+
+      loadRoleCount(rows);
+      loadLeaderboard(rows);
+
+      const now = new Date().toLocaleString("en-GB");
+      document.getElementById("role-updated").textContent = now;
+      document.getElementById("leaderboard-updated").textContent = now;
+    }
+
+    function loadRoleCount(rows) {
       const tbody = document.getElementById("role-body");
       tbody.innerHTML = "";
 
-      rows.forEach((row, index) => {
-        // Looking for rows 12 and 13 equivalent data:
-        // Assessor / N/A
-        // Signaller / 32
+      rows.forEach(row => {
         const role = row.c[0]?.v?.toString().trim();
         const total = row.c[1]?.v ?? "N/A";
 
         if (!role) return;
+
         if (role === "Assessor" || role === "Signaller") {
           let cls = "";
           if (role === "Assessor") cls = "assessor";
@@ -249,12 +345,92 @@
           tbody.appendChild(tr);
         }
       });
-
-      document.getElementById("data-updated").textContent =
-        new Date().toLocaleString("en-GB");
     }
 
-    loadQDRoleData();
+    function parseUsername(rawUsername) {
+      const raw = (rawUsername || "").toString().trim();
+
+      if (raw.startsWith("[M]")) {
+        return {
+          display: raw.replace(/^\[M\]\s*/, ""),
+          className: "manager"
+        };
+      }
+
+      if (raw.startsWith("[R]")) {
+        return {
+          display: raw.replace(/^\[R\]\s*/, ""),
+          className: "retired"
+        };
+      }
+
+      return {
+        display: raw,
+        className: "normal-user"
+      };
+    }
+
+    function loadLeaderboard(rows) {
+      const tbody = document.getElementById("leaderboard-body");
+      const showMoreBtn = document.getElementById("show-more-btn");
+      tbody.innerHTML = "";
+
+      const leaderboardRows = [];
+
+      rows.forEach(row => {
+        const position = row.c[0]?.v;
+        const usernameRaw = row.c[1]?.v;
+        const howMany = row.c[2]?.v;
+
+        if (position == null || !usernameRaw || howMany == null) return;
+
+        const usernameText = usernameRaw.toString().trim();
+
+        if (!/^\d+$/.test(String(position))) return;
+
+        leaderboardRows.push({
+          position,
+          usernameRaw: usernameText,
+          howMany
+        });
+      });
+
+      leaderboardRows.forEach((entry, index) => {
+        const parsed = parseUsername(entry.usernameRaw);
+        const hiddenClass = index >= 5 ? "hidden-row extra-row" : "";
+
+        const tr = document.createElement("tr");
+        tr.className = hiddenClass;
+        tr.innerHTML = `
+          <td>${entry.position}</td>
+          <td><span class="leaderboard-name ${parsed.className}">${parsed.display}</span></td>
+          <td>${entry.howMany}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (leaderboardRows.length > 5) {
+        showMoreBtn.style.display = "inline-block";
+        showMoreBtn.textContent = "Show more";
+      } else {
+        showMoreBtn.style.display = "none";
+      }
+    }
+
+    function toggleMoreRows() {
+      const extraRows = document.querySelectorAll(".extra-row");
+      const btn = document.getElementById("show-more-btn");
+
+      expandedLeaderboard = !expandedLeaderboard;
+
+      extraRows.forEach(row => {
+        row.style.display = expandedLeaderboard ? "table-row" : "none";
+      });
+
+      btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
+    }
+
+    loadQDData();
   </script>
 
 </body>
