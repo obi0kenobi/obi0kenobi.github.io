@@ -405,11 +405,6 @@ canvas {
             </tbody>
           </table>
 
-          <div class="show-more-wrap">
-            <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
-              Show more
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -553,49 +548,29 @@ canvas {
       };
     }
 
-    function loadLeaderboard(rows) {
-      const tbody = document.getElementById("leaderboard-body");
-      const showMoreBtn = document.getElementById("show-more-btn");
-      tbody.innerHTML = "";
+function loadLeaderboard(rows) {
+  const tbody = document.getElementById("leaderboard-body");
+  tbody.innerHTML = "";
 
-      const leaderboardRows = [];
+  rows.forEach(row => {
+    const position = row.c?.[0]?.v;
+    const usernameRaw = row.c?.[1]?.v;
+    const howMany = row.c?.[2]?.v;
 
-      rows.forEach(row => {
-        const position = row.c?.[0]?.v;
-        const usernameRaw = row.c?.[1]?.v;
-        const howMany = row.c?.[2]?.v;
+    if (position == null || !usernameRaw || howMany == null) return;
+    if (String(position).trim() === "Position") return;
 
-        if (position == null || !usernameRaw || howMany == null) return;
-        if (String(position).trim() === "Position") return;
+    const parsed = parseUsername(String(usernameRaw).trim());
 
-        leaderboardRows.push({
-          position,
-          usernameRaw: String(usernameRaw).trim(),
-          howMany
-        });
-      });
-
-      leaderboardRows.forEach((entry, index) => {
-        const parsed = parseUsername(entry.usernameRaw);
-        const hiddenClass = index >= 10 ? "hidden-row extra-row" : "";
-
-        const tr = document.createElement("tr");
-        tr.className = hiddenClass;
-        tr.innerHTML = `
-          <td>${entry.position}</td>
-          <td><span class="leaderboard-name ${parsed.className}">${parsed.display}</span></td>
-          <td>${entry.howMany}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      if (leaderboardRows.length > 10) {
-        showMoreBtn.style.display = "inline-block";
-        showMoreBtn.textContent = "Show more";
-      } else {
-        showMoreBtn.style.display = "none";
-      }
-    }
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${position}</td>
+      <td><span class="leaderboard-name ${parsed.className}">${parsed.display}</span></td>
+      <td>${howMany}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
 
     function toggleMoreRows() {
       const extraRows = document.querySelectorAll(".extra-row");
