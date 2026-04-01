@@ -338,7 +338,7 @@
       try {
         const [updatedJson, roleJson, leaderboardJson, monthlyJson] = await Promise.all([
           fetchSheetRange("F2:G2"),
-          fetchSheetRange("A12:B13"),
+          fetchSheetRange("A12:B14"),
           fetchSheetRange("A17:C26"),
           fetchSheetRange("A31:B42")
         ]);
@@ -402,23 +402,25 @@ function loadRoleCount(rows) {
   const tbody = document.getElementById("role-body");
   tbody.innerHTML = "";
 
-  // Force correct rows (A12:B13)
-  const assessor = rows[0];
-  const signaller = rows[1];
+  // Remove header row if it appears
+  const cleanRows = rows.filter(r => {
+    const name = r?.c?.[0]?.v;
+    return name && name !== "Role";
+  });
 
-  const assessorName = assessor?.c?.[0]?.v || "Assessor";
+  const assessor = cleanRows[0];
+  const signaller = cleanRows[1];
+
   const assessorTotal = assessor?.c?.[1]?.v ?? "N/A";
-
-  const signallerName = signaller?.c?.[0]?.v || "Signaller";
   const signallerTotal = signaller?.c?.[1]?.v ?? "N/A";
 
   tbody.innerHTML = `
     <tr>
-      <td class="assessor">${assessorName}</td>
+      <td class="assessor">Assessor</td>
       <td>${assessorTotal}</td>
     </tr>
     <tr>
-      <td class="signaller">${signallerName}</td>
+      <td class="signaller">Signaller</td>
       <td>${signallerTotal}</td>
     </tr>
   `;
