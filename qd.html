@@ -265,8 +265,6 @@
             </tr>
           </tbody>
         </table>
-
-        <p class="updated">Data updated: <b id="role-updated">Loading...</b></p>
       </div>
 
       <div class="table-box">
@@ -292,8 +290,6 @@
             Show more
           </button>
         </div>
-
-        <p class="updated">Data updated: <b id="leaderboard-updated">Loading...</b></p>
       </div>
 
     </div>
@@ -301,9 +297,6 @@
 
   <script>
     let expandedLeaderboard = false;
-
-    document.getElementById("last-updated").textContent =
-      new Date().toLocaleDateString("en-GB");
 
     async function loadQDData() {
       const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
@@ -314,12 +307,23 @@
       const json = JSON.parse(text.substr(47).slice(0, -2));
       const rows = json.table.rows;
 
+      const lastUpdated = findLastUpdated(rows);
+      document.getElementById("last-updated").textContent = lastUpdated;
+
       loadRoleCount(rows);
       loadLeaderboard(rows);
+    }
 
-      const now = new Date().toLocaleString("en-GB");
-      document.getElementById("role-updated").textContent = now;
-      document.getElementById("leaderboard-updated").textContent = now;
+    function findLastUpdated(rows) {
+      for (const row of rows) {
+        const label = row.c[5]?.v?.toString().trim();
+        const value = row.c[6]?.v;
+
+        if (label === "LAST UPDATED" && value) {
+          return value;
+        }
+      }
+      return "Not available";
     }
 
     function loadRoleCount(rows) {
