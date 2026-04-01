@@ -305,18 +305,70 @@
         new Date().toLocaleString("en-GB");
     }
 
-    loadTrainingData();
+<script>
+  async function loadTrainingData() {
+    const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
 
-    function filterTraining(type) {
-      document.querySelectorAll(".training-table tbody tr").forEach(row => {
-        if (type === "all" || row.querySelector("td").classList.contains(type)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
-  </script>
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.substr(47).slice(0, -2));
+
+    const rows = json.table.rows;
+    const tbody = document.getElementById("training-body");
+    tbody.innerHTML = "";
+
+    rows.forEach(row => {
+      const typeRaw = row.c[0]?.v?.toString().trim();
+
+      // Skip blank rows
+      if (!typeRaw) return;
+
+      // Skip the "LAST UPDATED" row if it appears
+      if (typeRaw === "LAST UPDATED") return;
+
+      const host = row.c[1]?.v ?? "N/A";
+      const cohost = row.c[2]?.v ?? 0;
+      const total = row.c[3]?.v ?? 0;
+
+      let name = "";
+      let cls = "";
+
+      if (typeRaw === "QD") {
+        name = "Qualified Driver";
+        cls = "qd qualified";
+      } else if (typeRaw === "DS") {
+        name = "Dispatcher";
+        cls = "ds dispatcher";
+      } else if (typeRaw === "GD") {
+        name = "Guard";
+        cls = "gd guard";
+      } else if (typeRaw === "SG P") {
+        name = "Signaller Practical";
+        cls = "sg signaller";
+      } else if (typeRaw === "SG A") {
+        name = "Signaller Assessment";
+        cls = "sg signaller";
+      } else {
+        return;
+      }
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="${cls}">${name}</td>
+        <td>${host}</td>
+        <td>${cohost}</td>
+        <td>${total}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById("data-updated").textContent =
+      new Date().toLocaleString("en-GB");
+  }
+
+  loadTrainingData();
+</script>
 
 </body>
 </html>
