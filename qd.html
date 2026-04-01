@@ -266,7 +266,6 @@
     </div>
 
     <div class="dashboard-grid">
-
       <div class="left-column">
         <div class="table-box">
           <h2>Role Count</h2>
@@ -319,61 +318,65 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
     let expandedLeaderboard = false;
     let monthlyChart = null;
 
-    async function loadQDData() {
-      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
-      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json`;
-
+    async function fetchSheetRange(range) {
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(range)}`;
       const res = await fetch(url);
       const text = await res.text();
-      const json = JSON.parse(text.substr(47).slice(0, -2));
-      const rows = json.table.rows;
-
-      const lastUpdated = findLastUpdated(rows);
-      document.getElementById("last-updated").textContent = lastUpdated;
-
-      loadRoleCount(rows);
-      loadLeaderboard(rows);
-      await loadMonthlyChart();
+      return JSON.parse(text.substr(47).slice(0, -2));
     }
 
-    function findLastUpdated(rows) {
-      for (const row of rows) {
-        const label = row.c[5]?.v?.toString().trim();
-        const value = row.c[6]?.v;
+    async function loadQDData() {
+      try {
+        const [updatedJson, roleJson, leaderboardJson, monthlyJson] = await Promise.all([
+          fetchSheetRange("F2:G2"),
+          fetchSheetRange("A12:B13"),
+          fetchSheetRange("A17:C26"),
+          fetchSheetRange("A31:B42")
+        ]);
 
-        if (label === "LAST UPDATED" && value) {
-          const match = value.match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
-
-          if (match) {
-            const year = parseInt(match[1], 10);
-            const month = parseInt(match[2], 10);
-            const day = parseInt(match[3], 10);
-            const hour = parseInt(match[4] || 0, 10);
-            const minute = parseInt(match[5] || 0, 10);
-            const second = parseInt(match[6] || 0, 10);
-
-            const date = new Date(year, month, day, hour, minute, second);
-
-            const formatted =
-              date.toLocaleDateString("en-GB") + " " +
-              date.toLocaleTimeString("en-GB", { hour12: false });
-
-            return `${formatted} (${timeAgo(date)})`;
-          }
-
-          return value;
-        }
+        document.getElementById("last-updated").textContent = parseLastUpdated(updatedJson.table.rows);
+        loadRoleCount(roleJson.table.rows);
+        loadLeaderboard(leaderboardJson.table.rows);
+        loadMonthlyChart(monthlyJson.table.rows);
+      } catch (error) {
+        console.error(error);
+        document.getElementById("last-updated").textContent = "Failed to load";
+        document.getElementById("role-body").innerHTML = '<tr><td colspan="2">Failed to load data.</td></tr>';
+        document.getElementById("leaderboard-body").innerHTML = '<tr><td colspan="3">Failed to load data.</td></tr>';
       }
-      return "Not available";
+    }
+
+    function parseLastUpdated(rows) {
+      const value = rows?.[0]?.c?.[1]?.v;
+      if (!value) return "Not available";
+
+      const match = String(value).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+
+      if (!match) return String(value);
+
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const day = parseInt(match[3], 10);
+      const hour = parseInt(match[4] || 0, 10);
+      const minute = parseInt(match[5] || 0, 10);
+      const second = parseInt(match[6] || 0, 10);
+
+      const date = new Date(year, month, day, hour, minute, second);
+
+      const formatted =
+        date.toLocaleDateString("en-GB") + " " +
+        date.toLocaleTimeString("en-GB", { hour12: false });
+
+      return `${formatted} (${timeAgo(date)})`;
     }
 
     function timeAgo(date) {
@@ -399,30 +402,19 @@
       const tbody = document.getElementById("role-body");
       tbody.innerHTML = "";
 
-      const roleRows = [];
-
       rows.forEach(row => {
-        const role = row.c[0]?.v?.toString().trim();
-        const total = row.c[1]?.v ?? "N/A";
+        const role = row.c?.[0]?.v?.toString().trim();
+        const total = row.c?.[1]?.v ?? "N/A";
+        if (!role) return;
 
-        if (role === "Assessor" || role === "Signaller") {
-          roleRows.push({ role, total });
-        }
-      });
+        let cls = "";
+        if (role === "Assessor") cls = "assessor";
+        if (role === "Signaller") cls = "signaller";
 
-      const seen = new Set();
-      const filtered = roleRows.filter(item => {
-        if (seen.has(item.role)) return false;
-        seen.add(item.role);
-        return true;
-      });
-
-      filtered.forEach(item => {
-        const cls = item.role === "Assessor" ? "assessor" : "signaller";
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td class="${cls}">${item.role}</td>
-          <td>${item.total}</td>
+          <td class="${cls}">${role}</td>
+          <td>${total}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -459,19 +451,15 @@
       const leaderboardRows = [];
 
       rows.forEach(row => {
-        const position = row.c[0]?.v;
-        const usernameRaw = row.c[1]?.v;
-        const howMany = row.c[2]?.v;
+        const position = row.c?.[0]?.v;
+        const usernameRaw = row.c?.[1]?.v;
+        const howMany = row.c?.[2]?.v;
 
         if (position == null || !usernameRaw || howMany == null) return;
 
-        const usernameText = usernameRaw.toString().trim();
-
-        if (!/^\d+$/.test(String(position))) return;
-
         leaderboardRows.push({
           position,
-          usernameRaw: usernameText,
+          usernameRaw: String(usernameRaw).trim(),
           howMany
         });
       });
@@ -511,24 +499,15 @@
       btn.textContent = expandedLeaderboard ? "Show less" : "Show more";
     }
 
-    async function loadMonthlyChart() {
-      const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
-      const query = encodeURIComponent("select A, B offset 30 limit 12");
-      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${query}`;
-
-      const res = await fetch(url);
-      const text = await res.text();
-      const json = JSON.parse(text.substr(47).slice(0, -2));
-      const rows = json.table.rows;
-
+    function loadMonthlyChart(rows) {
       const labels = [];
       const values = [];
 
       rows.forEach(row => {
-        const month = row.c[0]?.v?.toString().trim();
-        const amount = row.c[1]?.v;
+        const month = row.c?.[0]?.v?.toString().trim();
+        const amount = row.c?.[1]?.v;
 
-        if (!month || amount == null) return;
+        if (!month || amount == null || amount === "") return;
 
         labels.push(month);
         values.push(Number(amount));
