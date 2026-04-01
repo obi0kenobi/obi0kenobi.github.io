@@ -100,29 +100,26 @@
       color: #111;
     }
 
-.dashboard-grid {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 25px;
-  align-items: start;
-}
-
-.right-column {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.right-column .table-box {
-  height: 100%;
-}
+    .dashboard-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 25px;
+      align-items: start;
+    }
 
     .left-column {
       display: flex;
       flex-direction: column;
       gap: 25px;
+      min-width: 0;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
     }
 
     .table-box {
@@ -131,6 +128,11 @@
       border-radius: 18px;
       text-align: left;
       box-sizing: border-box;
+      width: 100%;
+    }
+
+    .right-column .table-box {
+      height: 100%;
     }
 
     .table-box h2 {
@@ -245,41 +247,37 @@
       gap: 25px;
     }
 
+    .pie-grid .table-box {
+      padding: 22px 24px;
+    }
+
+    .pie-grid .table-box h2 {
+      margin-bottom: 14px;
+      font-size: 28px;
+    }
+
     .chart-wrap {
       width: 100%;
       height: 220px;
       position: relative;
     }
 
-    .pie-grid .table-box {
-  padding: 22px 24px;
-}
-
-.pie-grid .table-box h2 {
-  margin-bottom: 14px;
-  font-size: 28px;
-}
-
-.pie-grid .chart-note {
-  margin-top: 8px;
-}
-
-.total-note {
-  margin-top: 8px;
-  text-align: center;
-  color: #aaa;
-  font-size: 14px;
-}
-
-.total-note b {
-  color: white;
-}
-
     .chart-note {
-      margin-top: 12px;
+      margin-top: 8px;
       color: #888;
       font-size: 14px;
       text-align: center;
+    }
+
+    .total-note {
+      margin-top: 8px;
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .total-note b {
+      color: white;
     }
 
     .full-width {
@@ -345,14 +343,15 @@
           </table>
         </div>
 
-<div class="table-box">
-  <h2>Trainee Stats</h2>
-  <div class="chart-wrap">
-    <canvas id="trainee-stats-chart"></canvas>
-  </div>
-  <p class="chart-note">Breakdown of passed vs failed trainees.</p>
-  <p class="total-note">Total assessed: <b id="assessed-total">Loading...</b></p>
-</div>
+        <div class="pie-grid">
+          <div class="table-box">
+            <h2>Trainee Stats</h2>
+            <div class="chart-wrap">
+              <canvas id="trainee-stats-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed trainees.</p>
+            <p class="total-note">Total assessed: <b id="assessed-total">Loading...</b></p>
+          </div>
 
           <div class="table-box">
             <h2>Training Role Types</h2>
@@ -365,32 +364,33 @@
 
       </div>
 
-<div class="right-column">
-  <div class="table-box">
-    <h2>Top Supervisors</h2>
+      <div class="right-column">
+        <div class="table-box">
+          <h2>Top Supervisors</h2>
 
-    <table class="leaderboard-table">
-      <thead>
-        <tr>
-          <th>Position</th>
-          <th>Username</th>
-          <th>How many</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body">
-        <tr>
-          <td colspan="3">Loading data...</td>
-        </tr>
-      </tbody>
-    </table>
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Username</th>
+                <th>How many</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <tr>
+                <td colspan="3">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
 
-    <div class="show-more-wrap">
-      <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
-        Show more
-      </button>
+          <div class="show-more-wrap">
+            <button id="show-more-btn" class="show-more-btn" onclick="toggleMoreRows()" style="display:none;">
+              Show more
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <div class="table-box full-width">
       <h2>Monthly Trainings</h2>
@@ -641,68 +641,70 @@
       });
     }
 
-function loadTraineeChart(rows) {
-  let passed = 0;
-  let failed = 0;
-  let totalAssessed = 0;
+    function loadTraineeChart(rows) {
+      let passed = 0;
+      let failed = 0;
+      let totalAssessed = 0;
 
-  rows.forEach(row => {
-    const label = row.c?.[0]?.v?.toString().trim().toLowerCase();
-    const value = Number(row.c?.[1]?.v ?? 0);
+      rows.forEach(row => {
+        const label = row.c?.[0]?.v?.toString().trim().toLowerCase();
+        const value = Number(row.c?.[1]?.v ?? 0);
 
-    if (!label) return;
+        if (!label) return;
 
-    if (label.includes("pass")) {
-      passed = value;
-    } else if (label.includes("fail")) {
-      failed = value;
-    } else if (label.includes("assessed") || label.includes("total")) {
-      totalAssessed = value;
-    }
-  });
-
-  // fallback in case total isn't supplied separately
-  if (!totalAssessed) {
-    totalAssessed = passed + failed;
-  }
-
-  document.getElementById("assessed-total").textContent = totalAssessed;
-
-  const ctx = document.getElementById("trainee-stats-chart").getContext("2d");
-
-  if (traineeChart) traineeChart.destroy();
-
-  traineeChart = new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: ["Passed", "Failed"],
-      datasets: [{
-        data: [passed, failed],
-        backgroundColor: ["#12af86", "#d84340"]
-      }]
-    },
-options: {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "bottom",
-      labels: {
-        color: "#ddd",
-        usePointStyle: true,
-        pointStyle: "circle",
-        boxWidth: 10,
-        boxHeight: 10,
-        padding: 18,
-        font: {
-          size: 13
+        if (label.includes("pass")) {
+          passed = value;
+        } else if (label.includes("fail")) {
+          failed = value;
+        } else if (label.includes("assessed") || label.includes("total")) {
+          totalAssessed = value;
         }
+      });
+
+      if (!totalAssessed) {
+        totalAssessed = passed + failed;
       }
+
+      document.getElementById("assessed-total").textContent = totalAssessed;
+
+      const ctx = document.getElementById("trainee-stats-chart").getContext("2d");
+
+      if (traineeChart) traineeChart.destroy();
+
+      traineeChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["Passed", "Failed"],
+          datasets: [{
+            data: [passed, failed],
+            backgroundColor: ["#12af86", "#d84340"],
+            borderColor: "#1a1a1a",
+            borderWidth: 3,
+            radius: "82%"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: "#ddd",
+                usePointStyle: true,
+                pointStyle: "circle",
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 18,
+                font: {
+                  size: 13
+                }
+              }
+            }
+          }
+        }
+      });
     }
-  }
-}
-  });
-}
 
     function loadRolePieChart(rows) {
       const labels = [];
@@ -735,7 +737,10 @@ options: {
           labels: labels,
           datasets: [{
             data: values,
-            backgroundColor: colors
+            backgroundColor: colors,
+            borderColor: "#1a1a1a",
+            borderWidth: 3,
+            radius: "82%"
           }]
         },
         options: {
@@ -743,7 +748,18 @@ options: {
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              labels: { color: "#ddd" }
+              position: "bottom",
+              labels: {
+                color: "#ddd",
+                usePointStyle: true,
+                pointStyle: "circle",
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 18,
+                font: {
+                  size: 13
+                }
+              }
             }
           }
         }
