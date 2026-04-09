@@ -121,11 +121,15 @@
   flex-direction: column;
   gap: 25px;
   min-width: 0;
-  height: 100%;
 }
 
-.right-column .table-box {
-  min-height: 100%;
+.right-column > .table-box:first-child {
+  height: auto;
+}
+
+.right-column > .table-box:last-child {
+  height: auto;
+  min-height: 180px;
 }
 
     .table-box {
