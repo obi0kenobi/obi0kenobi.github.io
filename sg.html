@@ -284,10 +284,10 @@
       min-height: 360px;
     }
 
-    .passrate-grid .table-box h2 {
-      margin-bottom: 14px;
-      font-size: 28px;
-    }
+.passrate-grid .table-box {
+  padding: 22px 24px;
+  min-height: 390px;
+}
 
     .full-width {
       max-width: 1200px;
@@ -439,6 +439,26 @@
           </div>
         </div>
 
+                <div class="passrate-grid">
+          <div class="table-box">
+            <h2>Practical Passrate</h2>
+            <div class="chart-wrap">
+              <canvas id="practical-passrate-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed practical trainees.</p>
+            <p class="total-note">Total assessed: <b id="practical-total">Loading...</b></p>
+          </div>
+
+          <div class="table-box">
+            <h2>Assessment Passrate</h2>
+            <div class="chart-wrap">
+              <canvas id="assessment-passrate-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed assessment trainees.</p>
+            <p class="total-note">Total assessed: <b id="assessment-total">Loading...</b></p>
+          </div>
+        </div>
+
       </div>
 
       <div class="right-column">
@@ -459,26 +479,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="passrate-grid">
-          <div class="table-box">
-            <h2>Practical Passrate</h2>
-            <div class="chart-wrap">
-              <canvas id="practical-passrate-chart"></canvas>
-            </div>
-            <p class="chart-note">Breakdown of passed vs failed practical trainees.</p>
-            <p class="total-note">Total assessed: <b id="practical-total">Loading...</b></p>
-          </div>
-
-          <div class="table-box">
-            <h2>Assessment Passrate</h2>
-            <div class="chart-wrap">
-              <canvas id="assessment-passrate-chart"></canvas>
-            </div>
-            <p class="chart-note">Breakdown of passed vs failed assessment trainees.</p>
-            <p class="total-note">Total assessed: <b id="assessment-total">Loading...</b></p>
-          </div>
         </div>
       </div>
     </div>
