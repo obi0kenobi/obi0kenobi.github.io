@@ -1,1 +1,877 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signaller Data</title>
 
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background: #111;
+    }
+
+    .navbar a {
+      color: #ccc;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .navbar a:hover {
+      color: white;
+    }
+
+    .content {
+      padding: 50px 20px 80px;
+    }
+
+    .page-title {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #12af86;
+    }
+
+    .overview {
+      max-width: 800px;
+      margin: 30px auto 20px;
+      text-align: center;
+    }
+
+    .overview h2 {
+      font-size: 38px;
+      margin-bottom: 15px;
+      color: #8ee0cb;
+    }
+
+    .overview p {
+      color: #bbb;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .overview .updated {
+      color: #888;
+    }
+
+    .overview .updated b {
+      color: white;
+    }
+
+    .overview::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 2px;
+      background: #12af86;
+      margin: 20px auto 0;
+    }
+
+    .training-buttons {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+
+    .training-buttons a {
+      text-decoration: none;
+    }
+
+    .training-buttons button {
+      margin: 5px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: none;
+      background: #2a2a2a;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .training-buttons button:hover {
+      background: #12af86;
+      color: #111;
+    }
+
+    .dashboard-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 25px;
+      align-items: start;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      min-width: 0;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .table-box {
+      padding: 30px;
+      background: #1a1a1a;
+      border-radius: 18px;
+      text-align: left;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .right-column .table-box {
+      height: 100%;
+    }
+
+    .table-box h2 {
+      font-size: 34px;
+      margin-bottom: 20px;
+      color: #60a5fa;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    th {
+      color: #12af86;
+      font-weight: bold;
+    }
+
+    td {
+      color: #ddd;
+    }
+
+    .host {
+      color: #21d6d1;
+      font-weight: bold;
+    }
+
+    .assessor {
+      color: #12af86;
+      font-weight: bold;
+    }
+
+    .driver {
+      color: #d84340;
+      font-weight: bold;
+    }
+
+    .practical {
+      color: #7dbc57;
+      font-weight: bold;
+    }
+
+    .assessment {
+      color: #12af86;
+      font-weight: bold;
+    }
+
+    .leaderboard-table th {
+      color: #12af86;
+    }
+
+    .leaderboard-name {
+      font-weight: bold;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .manager {
+      background: rgba(37, 99, 235, 0.22);
+      color: #93c5fd;
+    }
+
+    .retired {
+      background: rgba(255,255,255,0.08);
+      color: #b8b8b8;
+    }
+
+    .normal-user {
+      color: #ddd;
+      background: transparent;
+      padding: 0;
+    }
+
+    .na-user {
+      color: #8a8a8a;
+      background: rgba(255,255,255,0.05);
+      padding: 4px 8px;
+    }
+
+    .updated {
+      text-align: center;
+      margin-top: 15px;
+      color: #888;
+    }
+
+    .updated b {
+      color: white;
+    }
+
+    .pie-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      align-items: stretch;
+    }
+
+    .pie-grid .table-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 460px;
+      padding: 22px 24px;
+    }
+
+    .pie-grid .table-box h2 {
+      margin-bottom: 14px;
+      font-size: 28px;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      height: 220px;
+      position: relative;
+      margin: 0 auto;
+    }
+
+    .chart-note {
+      margin-top: 14px;
+      min-height: 22px;
+      color: #888;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .total-note {
+      margin-top: 10px;
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .total-note b {
+      color: white;
+    }
+
+    .full-width {
+      max-width: 1200px;
+      margin: 25px auto 0;
+    }
+
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 14px 16px;
+      background: #161616;
+      border-radius: 14px;
+    }
+
+    .timeline-date {
+      color: #12af86;
+      font-weight: bold;
+    }
+
+    .timeline-text {
+      color: #ddd;
+    }
+
+    .timeline-placeholder {
+      text-align: center;
+      color: #999;
+      padding: 20px 10px 8px;
+      line-height: 1.6;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    @media (max-width: 950px) {
+      .dashboard-grid,
+      .pie-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <div><a href="index.html">🏠 Home</a></div>
+    <div>
+      <a href="scr.html">SCR Data</a>
+      <a href="shifts.html">Shifts + Events Data</a>
+      <a href="signalling.html">Signalling</a>
+    </div>
+  </div>
+
+  <div class="content">
+    <h1 class="page-title">Signaller Data</h1>
+
+    <div class="overview">
+      <h2>Overview</h2>
+      <p>This page contains detailed Signaller data including role stats, training type split, pass rates, leaderboard stats, and future timeline updates.</p>
+      <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
+    </div>
+
+    <div class="training-buttons">
+      <a href="all.html"><button>ALL</button></a>
+      <a href="qd.html"><button>QD</button></a>
+      <a href="ds.html"><button>DS</button></a>
+      <a href="gd.html"><button>GD</button></a>
+      <a href="sg.html"><button>SG</button></a>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="left-column">
+
+        <div class="pie-grid">
+          <div class="table-box">
+            <h2>Role Count</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="role-body">
+                <tr>
+                  <td colspan="2">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-box">
+            <h2>Role Type Split</h2>
+            <div class="chart-wrap">
+              <canvas id="role-pie-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of Signaller role types.</p>
+          </div>
+        </div>
+
+        <div class="pie-grid">
+          <div class="table-box">
+            <h2>Practical vs Assessment</h2>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="training-type-body">
+                <tr>
+                  <td colspan="2">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-box">
+            <h2>Training Type Split</h2>
+            <div class="chart-wrap">
+              <canvas id="training-type-pie-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of practical vs assessment trainings.</p>
+          </div>
+        </div>
+
+        <div class="pie-grid">
+          <div class="table-box">
+            <h2>Practical Passrate</h2>
+            <div class="chart-wrap">
+              <canvas id="practical-passrate-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed practical trainees.</p>
+            <p class="total-note">Total assessed: <b id="practical-total">Loading...</b></p>
+          </div>
+
+          <div class="table-box">
+            <h2>Assessment Passrate</h2>
+            <div class="chart-wrap">
+              <canvas id="assessment-passrate-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed assessment trainees.</p>
+            <p class="total-note">Total assessed: <b id="assessment-total">Loading...</b></p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="right-column">
+        <div class="table-box">
+          <h2>Top Supervisors</h2>
+
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Username</th>
+                <th>How many</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <tr>
+                <td colspan="3">Loading data...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-box full-width">
+      <h2>Timeline</h2>
+      <div id="timeline-content" class="timeline-placeholder">
+        Timeline updates will appear here once data has been added.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const sheetID = "1FnnbM7oyssIdOI8DyKtx87Uqr8t1Rs2Ase3bTJYA5bw";
+    let rolePieChart = null;
+    let trainingTypePieChart = null;
+    let practicalPassrateChart = null;
+    let assessmentPassrateChart = null;
+
+    async function fetchSheetRange(range) {
+      const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&range=${encodeURIComponent(range)}`;
+      const res = await fetch(url);
+      const text = await res.text();
+      return JSON.parse(text.substr(47).slice(0, -2));
+    }
+
+    async function loadSGData() {
+      try {
+        const [
+          updatedJson,
+          roleJson,
+          typeJson,
+          practicalJson,
+          assessmentJson,
+          leaderboardJson,
+          timelineJson
+        ] = await Promise.all([
+          fetchSheetRange("F2:G2"),
+          fetchSheetRange("G16:H19"),
+          fetchSheetRange("G21:H23"),
+          fetchSheetRange("G25:H28"),
+          fetchSheetRange("G30:H33"),
+          fetchSheetRange("J17:L32"),
+          fetchSheetRange("Q16:R")
+        ]);
+
+        document.getElementById("last-updated").textContent = parseLastUpdated(updatedJson.table.rows);
+        loadRoleCount(roleJson.table.rows);
+        loadRolePieChart(roleJson.table.rows);
+
+        loadTrainingTypeTable(typeJson.table.rows);
+        loadTrainingTypePieChart(typeJson.table.rows);
+
+        loadPassrateChart(practicalJson.table.rows, "practical-passrate-chart", "practical-total");
+        loadPassrateChart(assessmentJson.table.rows, "assessment-passrate-chart", "assessment-total");
+
+        loadLeaderboard(leaderboardJson.table.rows);
+        loadTimeline(timelineJson.table.rows);
+      } catch (error) {
+        console.error(error);
+        document.getElementById("last-updated").textContent = "Failed to load";
+        document.getElementById("role-body").innerHTML = '<tr><td colspan="2">Failed to load data.</td></tr>';
+        document.getElementById("training-type-body").innerHTML = '<tr><td colspan="2">Failed to load data.</td></tr>';
+        document.getElementById("leaderboard-body").innerHTML = '<tr><td colspan="3">Failed to load data.</td></tr>';
+        document.getElementById("timeline-content").textContent = "Timeline data could not be loaded.";
+      }
+    }
+
+    function parseLastUpdated(rows) {
+      const value = rows?.[0]?.c?.[1]?.v;
+      if (!value) return "Not available";
+
+      const match = String(value).match(/Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/);
+      if (!match) return String(value);
+
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const day = parseInt(match[3], 10);
+      const hour = parseInt(match[4] || 0, 10);
+      const minute = parseInt(match[5] || 0, 10);
+      const second = parseInt(match[6] || 0, 10);
+
+      const date = new Date(year, month, day, hour, minute, second);
+
+      const formatted =
+        date.toLocaleDateString("en-GB") + " " +
+        date.toLocaleTimeString("en-GB", { hour12: false });
+
+      return `${formatted} (${timeAgo(date)})`;
+    }
+
+    function timeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+
+      const seconds = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      const months = Math.floor(days / 30);
+      const years = Math.floor(days / 365);
+
+      if (years > 0) return years === 1 ? "1 year ago" : `${years} years ago`;
+      if (months > 0) return months === 1 ? "1 month ago" : `${months} months ago`;
+      if (days > 0) return days === 1 ? "1 day ago" : `${days} days ago`;
+      if (hours > 0) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+      if (minutes > 0) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+      return "just now";
+    }
+
+    function niceLegend() {
+      return {
+        position: "bottom",
+        align: "center",
+        labels: {
+          color: "#ddd",
+          usePointStyle: true,
+          pointStyle: "circle",
+          boxWidth: 8,
+          boxHeight: 8,
+          padding: 14,
+          font: {
+            size: 11
+          }
+        }
+      };
+    }
+
+    function loadRoleCount(rows) {
+      const tbody = document.getElementById("role-body");
+      tbody.innerHTML = "";
+
+      rows.forEach(row => {
+        const role = row.c?.[0]?.v?.toString().trim();
+        const total = row.c?.[1]?.v ?? "N/A";
+
+        if (!role || role === "Role") return;
+
+        let cls = "";
+        if (role === "Host") cls = "host";
+        if (role === "Assessor") cls = "assessor";
+        if (role === "Driver") cls = "driver";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="${cls}">${role}</td>
+          <td>${total}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadRolePieChart(rows) {
+      const labels = [];
+      const values = [];
+      const colors = [];
+
+      rows.forEach(row => {
+        const role = row.c?.[0]?.v?.toString().trim();
+        const total = row.c?.[1]?.v;
+
+        if (!role || total == null || role === "Role") return;
+
+        labels.push(role);
+        values.push(Number(total));
+
+        if (role === "Host") colors.push("#21d6d1");
+        else if (role === "Assessor") colors.push("#12af86");
+        else if (role === "Driver") colors.push("#d84340");
+        else colors.push("#12af86");
+      });
+
+      const ctx = document.getElementById("role-pie-chart").getContext("2d");
+
+      if (rolePieChart) rolePieChart.destroy();
+
+      rolePieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: colors,
+            borderColor: "#1a1a1a",
+            borderWidth: 3,
+            radius: "72%"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: niceLegend()
+          }
+        }
+      });
+    }
+
+    function loadTrainingTypeTable(rows) {
+      const tbody = document.getElementById("training-type-body");
+      tbody.innerHTML = "";
+
+      rows.forEach(row => {
+        const type = row.c?.[0]?.v?.toString().trim();
+        const total = row.c?.[1]?.v ?? "N/A";
+
+        if (!type || type === "Type") return;
+
+        let cls = "";
+        if (type.toLowerCase().includes("assessment")) cls = "assessment";
+        if (type.toLowerCase().includes("practical")) cls = "practical";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="${cls}">${type}</td>
+          <td>${total}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadTrainingTypePieChart(rows) {
+      const labels = [];
+      const values = [];
+      const colors = [];
+
+      rows.forEach(row => {
+        const type = row.c?.[0]?.v?.toString().trim();
+        const total = row.c?.[1]?.v;
+
+        if (!type || total == null || type === "Type") return;
+
+        labels.push(type);
+        values.push(Number(total));
+
+        if (type.toLowerCase().includes("assessment")) colors.push("#12af86");
+        else if (type.toLowerCase().includes("practical")) colors.push("#7dbc57");
+        else colors.push("#12af86");
+      });
+
+      const ctx = document.getElementById("training-type-pie-chart").getContext("2d");
+
+      if (trainingTypePieChart) trainingTypePieChart.destroy();
+
+      trainingTypePieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: colors,
+            borderColor: "#1a1a1a",
+            borderWidth: 3,
+            radius: "72%"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: niceLegend()
+          }
+        }
+      });
+    }
+
+    function loadPassrateChart(rows, canvasId, totalId) {
+      let passed = 0;
+      let failed = 0;
+      let totalAssessed = 0;
+
+      rows.forEach(row => {
+        const label = row.c?.[0]?.v?.toString().trim().toLowerCase();
+        const value = Number(row.c?.[1]?.v ?? 0);
+
+        if (!label) return;
+
+        if (label.includes("pass")) {
+          passed = value;
+        } else if (label.includes("fail")) {
+          failed = value;
+        } else if (label.includes("assessed") || label.includes("total")) {
+          totalAssessed = value;
+        }
+      });
+
+      if (!totalAssessed) {
+        totalAssessed = passed + failed;
+      }
+
+      document.getElementById(totalId).textContent = totalAssessed;
+
+      const ctx = document.getElementById(canvasId).getContext("2d");
+
+      let chartRef = null;
+      if (canvasId === "practical-passrate-chart") chartRef = practicalPassrateChart;
+      if (canvasId === "assessment-passrate-chart") chartRef = assessmentPassrateChart;
+      if (chartRef) chartRef.destroy();
+
+      const newChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["Passed", "Failed"],
+          datasets: [{
+            data: [passed, failed],
+            backgroundColor: ["#12af86", "#d84340"],
+            borderColor: "#1a1a1a",
+            borderWidth: 3,
+            radius: "72%"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: niceLegend()
+          }
+        }
+      });
+
+      if (canvasId === "practical-passrate-chart") practicalPassrateChart = newChart;
+      if (canvasId === "assessment-passrate-chart") assessmentPassrateChart = newChart;
+    }
+
+    function parseUsername(rawUsername) {
+      const raw = (rawUsername || "").toString().trim();
+
+      if (raw === "N/A") {
+        return {
+          display: raw,
+          className: "na-user"
+        };
+      }
+
+      if (raw.startsWith("[M]")) {
+        return {
+          display: raw.replace(/^\[M\]\s*/, ""),
+          className: "manager"
+        };
+      }
+
+      if (raw.startsWith("[R]")) {
+        return {
+          display: raw.replace(/^\[R\]\s*/, ""),
+          className: "retired"
+        };
+      }
+
+      return {
+        display: raw,
+        className: "normal-user"
+      };
+    }
+
+    function loadLeaderboard(rows) {
+      const tbody = document.getElementById("leaderboard-body");
+      tbody.innerHTML = "";
+
+      rows.forEach(row => {
+        const position = row.c?.[0]?.v;
+        const usernameRaw = row.c?.[1]?.v;
+        const howMany = row.c?.[2]?.v;
+
+        if (position == null || !usernameRaw || howMany == null) return;
+        if (String(position).trim() === "Position") return;
+
+        const parsed = parseUsername(String(usernameRaw).trim());
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${position}</td>
+          <td><span class="leaderboard-name ${parsed.className}">${parsed.display}</span></td>
+          <td>${howMany}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function loadTimeline(rows) {
+      const container = document.getElementById("timeline-content");
+      const entries = [];
+
+      rows.forEach(row => {
+        const date = row.c?.[0]?.v?.toString().trim();
+        const text = row.c?.[1]?.v?.toString().trim();
+
+        if (!date || !text) return;
+        if (date.toLowerCase() === "date" || text.toLowerCase() === "event") return;
+
+        entries.push({ date, text });
+      });
+
+      if (entries.length === 0) {
+        container.className = "timeline-placeholder";
+        container.textContent = "Timeline updates will appear here once data has been added.";
+        return;
+      }
+
+      container.className = "timeline-list";
+      container.innerHTML = "";
+
+      entries.forEach(entry => {
+        const item = document.createElement("div");
+        item.className = "timeline-item";
+        item.innerHTML = `
+          <div class="timeline-date">${entry.date}</div>
+          <div class="timeline-text">${entry.text}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    loadSGData();
+  </script>
+
+</body>
+</html>
