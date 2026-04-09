@@ -119,6 +119,7 @@
     .right-column {
       display: flex;
       flex-direction: column;
+      gap: 25px;
       min-width: 0;
     }
 
@@ -129,10 +130,6 @@
       text-align: left;
       box-sizing: border-box;
       width: 100%;
-    }
-
-    .right-column .table-box {
-      height: 100%;
     }
 
     .table-box h2 {
@@ -166,7 +163,7 @@
     }
 
     .assessor {
-      color: #12af86;
+      color: #f1f1f1;
       font-weight: bold;
     }
 
@@ -176,12 +173,12 @@
     }
 
     .practical {
-      color: #7dbc57;
+      color: #f1f1f1;
       font-weight: bold;
     }
 
     .assessment {
-      color: #12af86;
+      color: #cfcfcf;
       font-weight: bold;
     }
 
@@ -239,7 +236,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      min-height: 460px;
+      min-height: 420px;
       padding: 22px 24px;
     }
 
@@ -248,11 +245,34 @@
       font-size: 28px;
     }
 
+    .combined-box {
+      min-height: 420px;
+    }
+
+    .combined-content {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .combined-table {
+      min-width: 0;
+    }
+
+    .combined-chart {
+      text-align: center;
+    }
+
     .chart-wrap {
       width: 100%;
       height: 220px;
       position: relative;
       margin: 0 auto;
+    }
+
+    .small-pie {
+      height: 190px;
     }
 
     .chart-note {
@@ -318,8 +338,13 @@
 
     @media (max-width: 950px) {
       .dashboard-grid,
-      .pie-grid {
+      .pie-grid,
+      .combined-content {
         grid-template-columns: 1fr;
+      }
+
+      .combined-chart {
+        margin-top: 8px;
       }
 
       .timeline-item {
@@ -362,78 +387,62 @@
       <div class="left-column">
 
         <div class="pie-grid">
-          <div class="table-box">
+          <div class="table-box combined-box">
             <h2>Role Count</h2>
 
-            <table>
-              <thead>
-                <tr>
-                  <th>Role</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody id="role-body">
-                <tr>
-                  <td colspan="2">Loading data...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <div class="combined-content">
+              <div class="combined-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Role</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="role-body">
+                    <tr>
+                      <td colspan="2">Loading data...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-          <div class="table-box">
-            <h2>Role Type Split</h2>
-            <div class="chart-wrap">
-              <canvas id="role-pie-chart"></canvas>
+              <div class="combined-chart">
+                <div class="chart-wrap small-pie">
+                  <canvas id="role-pie-chart"></canvas>
+                </div>
+                <p class="chart-note">Breakdown of Signaller role types.</p>
+              </div>
             </div>
-            <p class="chart-note">Breakdown of Signaller role types.</p>
           </div>
-        </div>
 
-        <div class="pie-grid">
-          <div class="table-box">
+          <div class="table-box combined-box">
             <h2>Practical vs Assessment</h2>
 
-            <table>
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody id="training-type-body">
-                <tr>
-                  <td colspan="2">Loading data...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            <div class="combined-content">
+              <div class="combined-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="training-type-body">
+                    <tr>
+                      <td colspan="2">Loading data...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-          <div class="table-box">
-            <h2>Training Type Split</h2>
-            <div class="chart-wrap">
-              <canvas id="training-type-pie-chart"></canvas>
+              <div class="combined-chart">
+                <div class="chart-wrap small-pie">
+                  <canvas id="training-type-pie-chart"></canvas>
+                </div>
+                <p class="chart-note">Breakdown of practical vs assessment trainings.</p>
+              </div>
             </div>
-            <p class="chart-note">Breakdown of practical vs assessment trainings.</p>
-          </div>
-        </div>
-
-        <div class="pie-grid">
-          <div class="table-box">
-            <h2>Practical Passrate</h2>
-            <div class="chart-wrap">
-              <canvas id="practical-passrate-chart"></canvas>
-            </div>
-            <p class="chart-note">Breakdown of passed vs failed practical trainees.</p>
-            <p class="total-note">Total assessed: <b id="practical-total">Loading...</b></p>
-          </div>
-
-          <div class="table-box">
-            <h2>Assessment Passrate</h2>
-            <div class="chart-wrap">
-              <canvas id="assessment-passrate-chart"></canvas>
-            </div>
-            <p class="chart-note">Breakdown of passed vs failed assessment trainees.</p>
-            <p class="total-note">Total assessed: <b id="assessment-total">Loading...</b></p>
           </div>
         </div>
 
@@ -457,6 +466,26 @@
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="pie-grid">
+          <div class="table-box">
+            <h2>Practical Passrate</h2>
+            <div class="chart-wrap">
+              <canvas id="practical-passrate-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed practical trainees.</p>
+            <p class="total-note">Total assessed: <b id="practical-total">Loading...</b></p>
+          </div>
+
+          <div class="table-box">
+            <h2>Assessment Passrate</h2>
+            <div class="chart-wrap">
+              <canvas id="assessment-passrate-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of passed vs failed assessment trainees.</p>
+            <p class="total-note">Total assessed: <b id="assessment-total">Loading...</b></p>
+          </div>
         </div>
       </div>
     </div>
@@ -643,7 +672,7 @@
             backgroundColor: colors,
             borderColor: "#1a1a1a",
             borderWidth: 3,
-            radius: "72%"
+            radius: "68%"
           }]
         },
         options: {
@@ -711,7 +740,7 @@
             backgroundColor: colors,
             borderColor: "#1a1a1a",
             borderWidth: 3,
-            radius: "72%"
+            radius: "68%"
           }]
         },
         options: {
