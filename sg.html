@@ -23,6 +23,7 @@
       color: #ccc;
       text-decoration: none;
       margin-left: 20px;
+      font-size: 14px;
     }
 
     .navbar a:hover {
@@ -31,53 +32,49 @@
 
     .content {
       padding: 50px 20px 80px;
+      max-width: 1250px;
+      margin: 0 auto;
     }
 
     .page-title {
       font-size: 48px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       color: #12af86;
     }
 
     .overview {
-      max-width: 800px;
-      margin: 30px auto 20px;
+      max-width: 820px;
+      margin: 0 auto 30px;
       text-align: center;
     }
 
-    .overview h2 {
-      font-size: 38px;
-      margin-bottom: 15px;
-      color: #8ee0cb;
-    }
-
     .overview p {
-      color: #bbb;
-      margin-bottom: 10px;
+      color: #aaa;
       line-height: 1.6;
+      margin: 10px auto;
     }
 
-    .overview .updated {
+    .updated {
       color: #888;
+      font-size: 14px;
     }
 
-    .overview .updated b {
+    .updated b {
       color: white;
     }
 
     .overview::after {
       content: "";
       display: block;
-      width: 60px;
+      width: 64px;
       height: 2px;
       background: #12af86;
-      margin: 20px auto 0;
+      margin: 18px auto 0;
     }
 
     .training-buttons {
       text-align: center;
-      margin-top: 20px;
-      margin-bottom: 40px;
+      margin: 25px 0 35px;
     }
 
     .training-buttons a {
@@ -100,54 +97,32 @@
       color: #111;
     }
 
-    .dashboard-grid {
-      max-width: 1200px;
-      margin: 0 auto;
+    .grid-2 {
       display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 25px;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
       align-items: start;
+      margin-bottom: 24px;
     }
 
-    .left-column {
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
+    .card {
+      background: #1a1a1a;
+      border-radius: 20px;
+      padding: 28px;
+      text-align: left;
+      box-sizing: border-box;
       min-width: 0;
     }
 
-.right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  min-width: 0;
-}
-
-.right-column > .table-box:first-child {
-  height: auto;
-}
-
-.right-column > .table-box:last-child {
-  height: auto;
-  min-height: 180px;
-}
-
-    .table-box {
-      padding: 30px;
-      background: #1a1a1a;
-      border-radius: 18px;
-      text-align: left;
-      box-sizing: border-box;
-      width: 100%;
+    .card h2 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      color: #60a5fa;
     }
-    
-    .right-column > .table-box {
-  min-height: 720px;
-}
 
-    .table-box h2 {
-      font-size: 34px;
-      margin-bottom: 20px;
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
       color: #60a5fa;
     }
 
@@ -157,17 +132,21 @@
     }
 
     th, td {
-      padding: 14px;
+      padding: 13px 12px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      vertical-align: middle;
     }
 
     th {
       color: #12af86;
       font-weight: bold;
+      font-size: 14px;
     }
 
     td {
-      color: #ddd;
+      color: #e5e5e5;
+      font-size: 15px;
     }
 
     .host {
@@ -186,17 +165,13 @@
     }
 
     .practical {
-      color: #f1f1f1;
+      color: #d7d7d7;
       font-weight: bold;
     }
 
     .assessment {
-      color: #cfcfcf;
+      color: #b8f0e1;
       font-weight: bold;
-    }
-
-    .leaderboard-table th {
-      color: #12af86;
     }
 
     .leaderboard-name {
@@ -223,56 +198,110 @@
     }
 
     .na-user {
-      color: #8a8a8a;
+      color: #888;
       background: rgba(255,255,255,0.05);
       padding: 4px 8px;
     }
 
-    .updated {
-      text-align: center;
-      margin-top: 15px;
-      color: #888;
-    }
-
-    .updated b {
-      color: white;
-    }
-
-    .combined-box {
-      min-height: 340px;
-    }
-
-    .combined-content {
+    .summary-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 260px;
-      gap: 24px;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .mini-stat {
+      background: #161616;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+    }
+
+    .mini-stat-label {
+      color: #8f8f8f;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .mini-stat-value {
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .muted-note {
+      color: #969696;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-top: 10px;
+    }
+
+    details.expand-card {
+      background: #1a1a1a;
+      border-radius: 20px;
+      padding: 0;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    details.expand-card summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 22px 28px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #60a5fa;
+      user-select: none;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
     }
 
-    .combined-table {
-      min-width: 0;
+    details.expand-card summary::-webkit-details-marker {
+      display: none;
     }
 
-    .combined-chart {
-      text-align: center;
+    .summary-right {
+      color: #12af86;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .expand-content {
+      padding: 0 28px 28px;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .chart-card {
+      background: #161616;
+      border-radius: 18px;
+      padding: 22px;
+      text-align: left;
+    }
+
+    .chart-card h3 {
+      margin-bottom: 12px;
     }
 
     .chart-wrap {
       width: 100%;
-      height: 220px;
+      height: 250px;
       position: relative;
       margin: 0 auto;
     }
 
-    .small-pie {
-      height: 210px;
-    }
-
     .chart-note {
-      margin-top: 14px;
-      color: #888;
-      font-size: 14px;
+      color: #8d8d8d;
+      font-size: 13px;
       text-align: center;
+      margin-top: 10px;
+      line-height: 1.4;
     }
 
     .total-note {
@@ -286,38 +315,17 @@
       color: white;
     }
 
-    .passrate-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 25px;
-    }
-
-    .passrate-grid .table-box {
-      padding: 22px 24px;
-      min-height: 360px;
-    }
-
-.passrate-grid .table-box {
-  padding: 22px 24px;
-  min-height: 390px;
-}
-
-.full-width {
-  max-width: 1200px;
-  margin: 25px auto 0;
-}
-
     .timeline-list {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 10px;
+      margin-top: 6px;
     }
 
     .timeline-item {
       display: grid;
       grid-template-columns: 160px 1fr;
-      gap: 18px;
+      gap: 16px;
       align-items: start;
       padding: 14px 16px;
       background: #161616;
@@ -336,28 +344,30 @@
     .timeline-placeholder {
       text-align: center;
       color: #999;
-      padding: 20px 10px 8px;
+      padding: 16px 4px 4px;
       line-height: 1.6;
     }
 
-    canvas {
-      max-width: 100%;
+    .hide-mobile {
+      display: table-row;
     }
 
     @media (max-width: 950px) {
-      .dashboard-grid,
-      .combined-content,
-      .passrate-grid {
+      .grid-2,
+      .chart-grid,
+      .summary-grid {
         grid-template-columns: 1fr;
-      }
-
-      .combined-chart {
-        margin-top: 8px;
       }
 
       .timeline-item {
         grid-template-columns: 1fr;
-        gap: 8px;
+      }
+
+      .card,
+      .expand-content,
+      details.expand-card summary {
+        padding-left: 20px;
+        padding-right: 20px;
       }
     }
   </style>
@@ -378,8 +388,7 @@
     <h1 class="page-title">Signaller Data</h1>
 
     <div class="overview">
-      <h2>Overview</h2>
-      <p>This page contains detailed Signaller data including role stats, training type split, pass rates, leaderboard stats, and future timeline updates.</p>
+      <p>This page contains detailed Signaller data including role stats, training split, pass rates, leaderboard stats, and future timeline updates.</p>
       <p class="updated">Last updated: <b id="last-updated">Loading...</b></p>
     </div>
 
@@ -391,70 +400,105 @@
       <a href="sg.html"><button>SG</button></a>
     </div>
 
-    <div class="dashboard-grid">
-      <div class="left-column">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Role Count</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="role-body">
+            <tr><td colspan="2">Loading data...</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div class="table-box combined-box">
-          <h2>Role Count</h2>
+      <div class="card">
+        <h2>Top Supervisors</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Username</th>
+              <th>How many</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body">
+            <tr><td colspan="3">Loading data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          <div class="combined-content">
-            <div class="combined-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Role</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody id="role-body">
-                  <tr>
-                    <td colspan="2">Loading data...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>Practical vs Assessment</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="training-type-body">
+            <tr><td colspan="2">Loading data...</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-            <div class="combined-chart">
-              <div class="chart-wrap small-pie">
-                <canvas id="role-pie-chart"></canvas>
-              </div>
-              <p class="chart-note">Breakdown of Signaller role types.</p>
-            </div>
+      <div class="card">
+        <h2>Quick Summary</h2>
+        <div class="summary-grid">
+          <div class="mini-stat">
+            <div class="mini-stat-label">Total SG trainings</div>
+            <div class="mini-stat-value" id="sg-total">0</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">Most used role</div>
+            <div class="mini-stat-value" id="top-role">—</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">Practical total</div>
+            <div class="mini-stat-value" id="practical-total-summary">0</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-label">Assessment total</div>
+            <div class="mini-stat-value" id="assessment-total-summary">0</div>
           </div>
         </div>
+        <p class="muted-note">Extra breakdowns, charts, pass rates and timeline are kept below so the page stays clean.</p>
+      </div>
+    </div>
 
-        <div class="table-box combined-box">
-          <h2>Practical vs Assessment</h2>
+    <details class="expand-card" open>
+      <summary>
+        <span>Detailed Charts & Timeline</span>
+        <span class="summary-right">expand / collapse</span>
+      </summary>
 
-          <div class="combined-content">
-            <div class="combined-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody id="training-type-body">
-                  <tr>
-                    <td colspan="2">Loading data...</td>
-                  </tr>
-                </tbody>
-              </table>
+      <div class="expand-content">
+        <div class="chart-grid">
+          <div class="chart-card">
+            <h3>Role Type Split</h3>
+            <div class="chart-wrap">
+              <canvas id="role-pie-chart"></canvas>
             </div>
-
-            <div class="combined-chart">
-              <div class="chart-wrap small-pie">
-                <canvas id="training-type-pie-chart"></canvas>
-              </div>
-              <p class="chart-note">Breakdown of practical vs assessment trainings.</p>
-            </div>
+            <p class="chart-note">Breakdown of Signaller role types.</p>
           </div>
-        </div>
 
-                <div class="passrate-grid">
-          <div class="table-box">
-            <h2>Practical Passrate</h2>
+          <div class="chart-card">
+            <h3>Training Type Split</h3>
+            <div class="chart-wrap">
+              <canvas id="training-type-pie-chart"></canvas>
+            </div>
+            <p class="chart-note">Breakdown of practical vs assessment trainings.</p>
+          </div>
+
+          <div class="chart-card">
+            <h3>Practical Passrate</h3>
             <div class="chart-wrap">
               <canvas id="practical-passrate-chart"></canvas>
             </div>
@@ -462,8 +506,8 @@
             <p class="total-note">Total assessed: <b id="practical-total">Loading...</b></p>
           </div>
 
-          <div class="table-box">
-            <h2>Assessment Passrate</h2>
+          <div class="chart-card">
+            <h3>Assessment Passrate</h3>
             <div class="chart-wrap">
               <canvas id="assessment-passrate-chart"></canvas>
             </div>
@@ -472,38 +516,14 @@
           </div>
         </div>
 
-      </div>
-
-      <div class="right-column">
-        <div class="table-box">
-          <h2>Top Supervisors</h2>
-
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th>Position</th>
-                <th>Username</th>
-                <th>How many</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-              <tr>
-                <td colspan="3">Loading data...</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="card" style="margin-top:24px;">
+          <h2>Timeline</h2>
+          <div id="timeline-content" class="timeline-placeholder">
+            Timeline updates will appear here once data has been added.
+          </div>
         </div>
-          <div class="table-box">
-    <h2>Timeline</h2>
-    <div id="timeline-content" class="timeline-placeholder">
-      Timeline updates will appear here once data has been added.
-    </div>
-  </div>
-</div>
       </div>
-    </div>
-
-
+    </details>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -542,6 +562,7 @@
         ]);
 
         document.getElementById("last-updated").textContent = parseLastUpdated(updatedJson.table.rows);
+
         loadRoleCount(roleJson.table.rows);
         loadRolePieChart(roleJson.table.rows);
 
@@ -553,6 +574,8 @@
 
         loadLeaderboard(leaderboardJson.table.rows);
         loadTimeline(timelineJson.table.rows);
+
+        loadSummary(roleJson.table.rows, typeJson.table.rows);
       } catch (error) {
         console.error(error);
         document.getElementById("last-updated").textContent = "Failed to load";
@@ -905,6 +928,40 @@
         `;
         container.appendChild(item);
       });
+    }
+
+    function loadSummary(roleRows, typeRows) {
+      let roleTotal = 0;
+      let topRole = "—";
+      let topRoleValue = -1;
+      let practical = 0;
+      let assessment = 0;
+
+      roleRows.forEach(row => {
+        const role = row.c?.[0]?.v?.toString().trim();
+        const total = Number(row.c?.[1]?.v ?? 0);
+        if (!role || role === "Role") return;
+
+        roleTotal += total;
+        if (total > topRoleValue) {
+          topRoleValue = total;
+          topRole = role;
+        }
+      });
+
+      typeRows.forEach(row => {
+        const type = row.c?.[0]?.v?.toString().trim().toLowerCase();
+        const total = Number(row.c?.[1]?.v ?? 0);
+        if (!type || type === "type") return;
+
+        if (type.includes("practical")) practical = total;
+        if (type.includes("assessment")) assessment = total;
+      });
+
+      document.getElementById("sg-total").textContent = roleTotal;
+      document.getElementById("top-role").textContent = topRole;
+      document.getElementById("practical-total-summary").textContent = practical;
+      document.getElementById("assessment-total-summary").textContent = assessment;
     }
 
     loadSGData();
