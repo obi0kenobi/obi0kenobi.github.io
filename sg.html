@@ -433,45 +433,45 @@
       </div>
     </div>
 
-    <div class="grid-2">
-      <div class="card">
-        <h2>Practical vs Assessment</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="training-type-body">
-            <tr><td colspan="2">Loading data...</td></tr>
-          </tbody>
-        </table>
+<div class="grid-2">
+  <div class="card">
+    <h2>Quick Summary</h2>
+    <div class="summary-grid">
+      <div class="mini-stat">
+        <div class="mini-stat-label">Total SG trainings</div>
+        <div class="mini-stat-value" id="sg-total">0</div>
       </div>
-
-      <div class="card">
-        <h2>Quick Summary</h2>
-        <div class="summary-grid">
-          <div class="mini-stat">
-            <div class="mini-stat-label">Total SG trainings</div>
-            <div class="mini-stat-value" id="sg-total">0</div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-label">Most used role</div>
-            <div class="mini-stat-value" id="top-role">—</div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-label">Practical total</div>
-            <div class="mini-stat-value" id="practical-total-summary">0</div>
-          </div>
-          <div class="mini-stat">
-            <div class="mini-stat-label">Assessment total</div>
-            <div class="mini-stat-value" id="assessment-total-summary">0</div>
-          </div>
-        </div>
-        <p class="muted-note">Extra breakdowns, charts, pass rates and timeline are kept below so the page stays clean.</p>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Overall passrate</div>
+        <div class="mini-stat-value" id="overall-passrate">0%</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Practical total</div>
+        <div class="mini-stat-value" id="practical-total-summary">0</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Assessment total</div>
+        <div class="mini-stat-value" id="assessment-total-summary">0</div>
       </div>
     </div>
+    <p class="muted-note">Extra breakdowns, charts, pass rates and timeline are kept below so the page stays clean.</p>
+  </div>
+
+  <div class="card">
+    <h2>Practical vs Assessment</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="training-type-body">
+        <tr><td colspan="2">Loading data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
     <details class="expand-card" open>
       <summary>
@@ -516,12 +516,15 @@
           </div>
         </div>
 
-        <div class="card" style="margin-top:24px;">
-          <h2>Timeline</h2>
-          <div id="timeline-content" class="timeline-placeholder">
-            Timeline updates will appear here once data has been added.
-          </div>
-        </div>
+  <div class="card" style="margin-top:24px;">
+  <h2>Timeline</h2>
+  <div class="chart-wrap">
+    <canvas id="timeline-chart"></canvas>
+  </div>
+  <p id="timeline-placeholder" class="timeline-placeholder" style="display:none;">
+    Timeline updates will appear here once data has been added.
+  </p>
+</div>
       </div>
     </details>
   </div>
@@ -575,7 +578,13 @@
         loadLeaderboard(leaderboardJson.table.rows);
         loadTimeline(timelineJson.table.rows);
 
-        loadSummary(roleJson.table.rows, typeJson.table.rows);
+        loadSummary(
+  roleJson.table.rows,
+  typeJson.table.rows,
+  practicalJson.table.rows,
+  assessmentJson.table.rows
+          let timelineChart = null;
+);
       } catch (error) {
         console.error(error);
         document.getElementById("last-updated").textContent = "Failed to load";
@@ -896,58 +905,126 @@
       });
     }
 
-    function loadTimeline(rows) {
-      const container = document.getElementById("timeline-content");
-      const entries = [];
+function loadTimeline(rows) {
+  const labels = [];
+  const values = [];
 
-      rows.forEach(row => {
-        const date = row.c?.[0]?.v?.toString().trim();
-        const text = row.c?.[1]?.v?.toString().trim();
+  rows.forEach(row => {
+    const label = row.c?.[0]?.v?.toString().trim();
+    const value = row.c?.[1]?.v;
 
-        if (!date || !text) return;
-        if (date.toLowerCase() === "date" || text.toLowerCase() === "event") return;
+    if (!label || value == null) return;
+    if (label.toLowerCase() === "date" || label.toLowerCase() === "month") return;
 
-        entries.push({ date, text });
-      });
+    labels.push(label);
+    values.push(Number(value));
+  });
 
-      if (entries.length === 0) {
-        container.className = "timeline-placeholder";
-        container.textContent = "Timeline updates will appear here once data has been added.";
-        return;
-      }
+  const canvas = document.getElementById("timeline-chart");
+  const placeholder = document.getElementById("timeline-placeholder");
 
-      container.className = "timeline-list";
-      container.innerHTML = "";
+  if (labels.length === 0) {
+    canvas.style.display = "none";
+    placeholder.style.display = "block";
+    return;
+  }
 
-      entries.forEach(entry => {
-        const item = document.createElement("div");
-        item.className = "timeline-item";
-        item.innerHTML = `
-          <div class="timeline-date">${entry.date}</div>
-          <div class="timeline-text">${entry.text}</div>
-        `;
-        container.appendChild(item);
-      });
-    }
+  canvas.style.display = "block";
+  placeholder.style.display = "none";
 
-    function loadSummary(roleRows, typeRows) {
-      let roleTotal = 0;
-      let topRole = "—";
-      let topRoleValue = -1;
-      let practical = 0;
-      let assessment = 0;
+  const ctx = canvas.getContext("2d");
 
-      roleRows.forEach(row => {
-        const role = row.c?.[0]?.v?.toString().trim();
-        const total = Number(row.c?.[1]?.v ?? 0);
-        if (!role || role === "Role") return;
+  if (timelineChart) timelineChart.destroy();
 
-        roleTotal += total;
-        if (total > topRoleValue) {
-          topRoleValue = total;
-          topRole = role;
+  timelineChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Timeline",
+        data: values,
+        backgroundColor: "#12af86",
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          ticks: { color: "#ccc" },
+          grid: { color: "rgba(255,255,255,0.05)" }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: "#ccc",
+            precision: 0
+          },
+          grid: { color: "rgba(255,255,255,0.05)" }
         }
-      });
+      }
+    }
+  });
+}
+
+function loadSummary(roleRows, typeRows, practicalRows, assessmentRows) {
+  let roleTotal = 0;
+  let practical = 0;
+  let assessment = 0;
+
+  let practicalPassed = 0;
+  let practicalFailed = 0;
+  let assessmentPassed = 0;
+  let assessmentFailed = 0;
+
+  roleRows.forEach(row => {
+    const role = row.c?.[0]?.v?.toString().trim();
+    const total = Number(row.c?.[1]?.v ?? 0);
+    if (!role || role === "Role") return;
+    roleTotal += total;
+  });
+
+  typeRows.forEach(row => {
+    const type = row.c?.[0]?.v?.toString().trim().toLowerCase();
+    const total = Number(row.c?.[1]?.v ?? 0);
+    if (!type || type === "type") return;
+
+    if (type.includes("practical")) practical = total;
+    if (type.includes("assessment")) assessment = total;
+  });
+
+  practicalRows.forEach(row => {
+    const label = row.c?.[0]?.v?.toString().trim().toLowerCase();
+    const value = Number(row.c?.[1]?.v ?? 0);
+    if (!label) return;
+
+    if (label.includes("pass")) practicalPassed = value;
+    if (label.includes("fail")) practicalFailed = value;
+  });
+
+  assessmentRows.forEach(row => {
+    const label = row.c?.[0]?.v?.toString().trim().toLowerCase();
+    const value = Number(row.c?.[1]?.v ?? 0);
+    if (!label) return;
+
+    if (label.includes("pass")) assessmentPassed = value;
+    if (label.includes("fail")) assessmentFailed = value;
+  });
+
+  const totalPassed = practicalPassed + assessmentPassed;
+  const totalFailed = practicalFailed + assessmentFailed;
+  const totalAssessed = totalPassed + totalFailed;
+  const overallPassrate = totalAssessed > 0 ? Math.round((totalPassed / totalAssessed) * 100) : 0;
+
+  document.getElementById("sg-total").textContent = roleTotal;
+  document.getElementById("overall-passrate").textContent = overallPassrate + "%";
+  document.getElementById("practical-total-summary").textContent = practical;
+  document.getElementById("assessment-total-summary").textContent = assessment;
+}
 
       typeRows.forEach(row => {
         const type = row.c?.[0]?.v?.toString().trim().toLowerCase();
